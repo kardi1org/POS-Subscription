@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\RenewalLog;
+use Illuminate\Support\Facades\Auth;
+
+class RenewalLogController extends Controller
+{
+    public function index()
+    {
+        $logs = RenewalLog::whereHas('pricing', function ($query) {
+            $query->where('user_id', Auth::id());
+        })
+            ->with(['pricing'])
+            ->latest()
+            ->paginate(10);
+
+        return view('user.renewals.index', compact('logs'));
+    }
+}
