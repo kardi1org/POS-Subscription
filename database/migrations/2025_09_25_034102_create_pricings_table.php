@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('codepaket');               // kode paket
             $table->string('namapaket');               // Nama paket atau harga
             $table->text('notes')->nullable(); // Deskripsi
-            $table->enum('status', ['Pending', 'Active']);
+            $table->enum('status', ['Pending', 'Active', 'Nonaktif', 'Waiting Approval', 'Aktif']);
             $table->timestamps();                // created_at & updated_at
         });
     }

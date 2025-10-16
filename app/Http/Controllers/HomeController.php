@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pricing;
+use App\Models\Package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -26,30 +27,35 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
     public function index()
     {
         $pricings = Pricing::where('email', Auth::user()->email)->get();
+
         foreach ($pricings as $pricing) {
             if ($pricing->status === 'Aktif' && $pricing->end_date) {
                 $daysRemaining = Carbon::now()->diffInDays($pricing->end_date, false);
 
-                // Kirim hanya jika ≤ 3 hari sebelum expired dan belum pernah dikirim hari ini
+                // Kirim email pengingat 3 hari sebelum masa aktif berakhir
                 if ($daysRemaining <= 3 && $daysRemaining >= 0) {
                     $today = Carbon::today();
 
                     if (!$pricing->reminder_sent_at || $pricing->reminder_sent_at->lt($today)) {
                         Mail::to($pricing->email)->send(new RenewalReminderMail($pricing, $daysRemaining));
 
-                        $pricing->reminder_sent_at = now(); // pakai save(), bukan update()
+                        $pricing->reminder_sent_at = now();
                         $pricing->save();
                     }
                 }
             }
         }
 
+        // ✅ Ambil daftar paket dari master table
+        $packages = Package::all();
 
-        return view('home', compact('pricings'));
+        return view('home', compact('pricings', 'packages'));
     }
+
     public function create($id)
     {
         if ($id == 1) {

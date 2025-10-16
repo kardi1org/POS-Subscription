@@ -31,4 +31,9 @@ class Pricing extends Model
     {
         return $this->hasMany(Renewal::class);
     }
+
+    public function package()
+    {
+        return $this->belongsTo(\App\Models\Package::class, 'codepaket');
+    }
 }

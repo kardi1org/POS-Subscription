@@ -74,7 +74,6 @@
                     <th>Bukti Bayar</th>
                     <th>Masa Aktif</th>
                     <th>Perpanjangan</th> {{-- 🔹 kolom baru --}}
-                    <th>Setting</th>
                 </tr>
             </thead>
             <tbody>
@@ -130,44 +129,49 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- Tombol Ganti Bukti --}}
-                                <button type="button" class="btn btn-warning btn-sm ms-2" data-bs-toggle="modal"
-                                    data-bs-target="#replaceModal{{ $pricing->id }}">
-                                    <i class="bi bi-arrow-repeat"></i>
-                                </button>
-                                <!-- Modal Ganti Bukti -->
-                                <div class="modal fade" id="replaceModal{{ $pricing->id }}" tabindex="-1"
-                                    aria-labelledby="replaceModalLabel{{ $pricing->id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form action="{{ route('pricings.uploadBukti', $pricing->id) }}" method="POST"
-                                                enctype="multipart/form-data">
-                                                @csrf
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="replaceModalLabel{{ $pricing->id }}">Ganti
-                                                        Bukti Transfer</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label for="bukti{{ $pricing->id }}" class="form-label">Upload
-                                                            Bukti Baru</label>
-                                                        <input type="file" name="bukti" id="bukti{{ $pricing->id }}"
-                                                            class="form-control" required>
+
+                                @if ($pricing->status === 'Pending' || $pricing->status === 'Waiting Approval')
+                                    {{-- Tombol Ganti Bukti --}}
+                                    <button type="button" class="btn btn-warning btn-sm ms-2" data-bs-toggle="modal"
+                                        data-bs-target="#replaceModal{{ $pricing->id }}">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                    <!-- Modal Ganti Bukti -->
+                                    <div class="modal fade" id="replaceModal{{ $pricing->id }}" tabindex="-1"
+                                        aria-labelledby="replaceModalLabel{{ $pricing->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="{{ route('pricings.uploadBukti', $pricing->id) }}"
+                                                    method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="replaceModalLabel{{ $pricing->id }}">
+                                                            Ganti
+                                                            Bukti Transfer</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
                                                     </div>
-                                                    <small class="text-muted">Maksimal ukuran file 2MB. File lama akan
-                                                        diganti.</small>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Batal</button>
-                                                    <button type="submit" class="btn btn-primary">Upload Baru</button>
-                                                </div>
-                                            </form>
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label for="bukti{{ $pricing->id }}" class="form-label">Upload
+                                                                Bukti Baru</label>
+                                                            <input type="file" name="bukti"
+                                                                id="bukti{{ $pricing->id }}" class="form-control"
+                                                                required>
+                                                        </div>
+                                                        <small class="text-muted">Maksimal ukuran file 2MB. File lama akan
+                                                            diganti.</small>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-primary">Upload Baru</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             @else
                                 {{-- Jika belum upload --}}
                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
@@ -214,10 +218,9 @@
 
                         {{-- === Masa Aktif === --}}
                         <td>
-                            @if ($pricing->status === 'Aktif' && $pricing->start_date && $pricing->end_date)
+                            @if ($pricing->start_date && $pricing->end_date)
                                 <div>
                                     <small>
-                                        {{ $pricing->start_date->format('d M Y') }} -
                                         {{ $pricing->end_date->format('d M Y') }}
                                     </small>
                                 </div>
@@ -255,26 +258,57 @@
                                     data-bs-target="#renewModal{{ $pricing->id }}">
                                     <i class="bi bi-arrow-clockwise"></i> Perpanjang
                                 </button>
-                                <!-- Modal Pop-up -->
+                                <!-- Modal Perpanjangan -->
                                 <div class="modal fade" id="renewModal{{ $pricing->id }}" tabindex="-1"
                                     aria-labelledby="renewModalLabel{{ $pricing->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="renewModalLabel{{ $pricing->id }}">
-                                                    Perpanjang Masa Aktif - {{ $pricing->namapaket }}
+                                                    Perpanjang / Upgrade Paket - {{ $pricing->namapaket }}
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
-                                            <form action="{{ route('pricing.renew', $pricing->id) }}" method="POST">
+
+                                            <form action="{{ route('pricing.proceedPayment', $pricing->id) }}"
+                                                method="POST" id="renewForm{{ $pricing->id }}">
                                                 @csrf
                                                 <div class="modal-body">
+                                                    <!-- Pilih Paket -->
                                                     <div class="mb-3">
-                                                        <label for="duration{{ $pricing->id }}" class="form-label">Pilih
-                                                            Durasi</label>
-                                                        <select class="form-select" id="duration{{ $pricing->id }}"
-                                                            name="duration" required>
+                                                        <label class="form-label">Pilih Paket</label>
+                                                        {{-- <select class="form-select" name="package_id"
+                                                            id="packageSelect{{ $pricing->id }}" required>
+                                                            <option value="">-- Pilih Paket --</option>
+                                                            @foreach ($packages as $package)
+                                                                <option value="{{ $package->id }}"
+                                                                    data-price="{{ $package->price }}"
+                                                                    {{ $pricing->package_id == $package->id ? 'selected' : '' }}>
+                                                                    {{ $package->name }} - Rp
+                                                                    {{ number_format($package->price, 0, ',', '.') }}/bulan
+                                                                </option>
+                                                            @endforeach
+                                                        </select> --}}
+                                                        <select class="form-select" name="package_id"
+                                                            id="packageSelect{{ $pricing->id }}" required>
+                                                            @foreach ($packages as $package)
+                                                                <option value="{{ $package->id }}"
+                                                                    data-price="{{ $package->price }}"
+                                                                    {{ $package->id == $pricing->codepaket ? 'selected' : '' }}>
+                                                                    {{ $package->name }} - Rp
+                                                                    {{ number_format($package->price, 0, ',', '.') }}/bulan
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+
+                                                    </div>
+
+                                                    <!-- Pilih Durasi -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Pilih Durasi</label>
+                                                        <select class="form-select" name="duration"
+                                                            id="durationSelect{{ $pricing->id }}" required>
                                                             <option value="">-- Pilih Durasi --</option>
                                                             <option value="1">1 Bulan</option>
                                                             <option value="3">3 Bulan</option>
@@ -283,16 +317,57 @@
                                                             <option value="36">3 Tahun</option>
                                                         </select>
                                                     </div>
+
+                                                    <!-- Total Harga -->
+                                                    <div id="totalContainer{{ $pricing->id }}"
+                                                        class="text-center fw-bold fs-5 text-success d-none">
+                                                        Total: Rp <span id="totalPrice{{ $pricing->id }}">0</span>
+                                                    </div>
                                                 </div>
+
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Batal</button>
-                                                    <button type="submit" class="btn btn-success">Perpanjang</button>
+                                                    <button type="submit" class="btn btn-primary">Lanjutkan
+                                                        Pembayaran</button>
                                                 </div>
                                             </form>
+
+                                            <script>
+                                                document.addEventListener("DOMContentLoaded", function() {
+                                                    const formId = "{{ $pricing->id }}";
+                                                    const packageSelect = document.getElementById("packageSelect" + formId);
+                                                    const durationSelect = document.getElementById("durationSelect" + formId);
+                                                    const totalContainer = document.getElementById("totalContainer" + formId);
+                                                    const totalPriceEl = document.getElementById("totalPrice" + formId);
+
+                                                    function updateTotal() {
+                                                        const selectedPackage = packageSelect.options[packageSelect.selectedIndex];
+                                                        const price = parseFloat(selectedPackage.getAttribute("data-price")) || 0;
+                                                        const duration = parseInt(durationSelect.value) || 0;
+
+                                                        if (price > 0 && duration > 0) {
+                                                            const total = price * duration;
+                                                            totalPriceEl.textContent = total.toLocaleString("id-ID");
+                                                            totalContainer.classList.remove("d-none");
+                                                        } else {
+                                                            totalContainer.classList.add("d-none");
+                                                        }
+                                                    }
+
+                                                    // Jalankan saat ganti paket atau durasi
+                                                    packageSelect.addEventListener("change", updateTotal);
+                                                    durationSelect.addEventListener("change", updateTotal);
+
+                                                    // Jalankan sekali saat halaman terbuka (biar langsung muncul jika paket default)
+                                                    updateTotal();
+                                                });
+                                            </script>
+
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- 🔹 Tombol Riwayat Perpanjangan -->
                                 <button type="button" class="btn btn-info btn-sm ms-2" data-bs-toggle="modal"
                                     data-bs-target="#historyModal{{ $pricing->id }}">
@@ -313,9 +388,11 @@
                                             <div class="modal-body">
                                                 @php
                                                     $renewals = \App\Models\Renewal::where('pricing_id', $pricing->id)
+                                                        ->where('status', 'Aktif') // hanya ambil data renewal yang aktif
                                                         ->orderBy('created_at', 'desc')
                                                         ->get();
                                                 @endphp
+
 
                                                 @if ($renewals->isEmpty())
                                                     <p class="text-muted text-center mb-0">Belum ada riwayat perpanjangan.
@@ -325,25 +402,32 @@
                                                         <thead class="table-light">
                                                             <tr>
                                                                 <th>#</th>
+                                                                <th>Plan</th>
                                                                 <th>Durasi</th>
-                                                                <th>Tanggal Lama</th>
-                                                                <th>Tanggal Baru</th>
+                                                                <th>Masa Aktif</th>
                                                                 <th>Tanggal Perpanjangan</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($renewals as $renewal)
+                                                                @php
+                                                                    // Ambil data paket berdasarkan new_package
+                                                                    $package = \App\Models\Package::find(
+                                                                        $renewal->new_package,
+                                                                    );
+                                                                @endphp
                                                                 <tr>
                                                                     <td>{{ $loop->iteration }}</td>
+                                                                    <td>{{ $package ? $package->name : '-' }}</td>
                                                                     <td>{{ $renewal->duration }} bulan</td>
-                                                                    <td>{{ $renewal->old_end_date ? \Carbon\Carbon::parse($renewal->old_end_date)->format('d M Y') : '-' }}
-                                                                    </td>
-                                                                    <td>{{ \Carbon\Carbon::parse($renewal->new_end_date)->format('d M Y') }}
+                                                                    <td>
+                                                                        {{ $renewal->new_end_date ? \Carbon\Carbon::parse($renewal->new_end_date)->format('d M Y') : '-' }}
                                                                     </td>
                                                                     <td>{{ $renewal->created_at->format('d M Y H:i') }}
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
+
                                                         </tbody>
                                                     </table>
                                                 @endif
@@ -355,10 +439,6 @@
                                 <span class="text-muted">-</span>
                             @endif
                         </td>
-
-
-
-                        <td>x</td>
                     </tr>
                 @endforeach
 
@@ -414,17 +494,36 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const signupModal = document.getElementById('signupModal');
+        if (signupModal) {
+            signupModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const codepaket = button.getAttribute('data-codepaket');
+                const namapaket = button.getAttribute('data-namapaket');
 
-        signupModal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
+                document.getElementById('codepaket').value = codepaket;
+                document.getElementById('namapaket').value = namapaket;
 
-            const codepaket = button.getAttribute('data-codepaket');
-            const namapaket = button.getAttribute('data-namapaket');
-
-            document.getElementById('codepaket').value = codepaket;
-            document.getElementById('namapaket').value = namapaket;
-
-            signupModal.querySelector('.modal-title').textContent = `Sign Up for Plan: ${namapaket}`;
-        });
+                signupModal.querySelector('.modal-title').textContent =
+                    `Sign Up for Plan: ${namapaket}`;
+            });
+        }
     });
+</script>
+
+<script>
+    function goToPayment(pricingId) {
+        const packageSelect = document.getElementById(`packageSelect${pricingId}`);
+        const durationSelect = document.getElementById(`durationSelect${pricingId}`);
+
+        const packageId = packageSelect.value;
+        const duration = durationSelect.value;
+
+        if (!packageId || !duration) {
+            alert('Silakan pilih paket dan durasi terlebih dahulu.');
+            return;
+        }
+
+        // Redirect ke halaman pembayaran sambil kirim query string
+        window.location.href = `/pricing/${pricingId}/payment?package_id=${packageId}&duration=${duration}`;
+    }
 </script>
