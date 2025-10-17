@@ -31,30 +31,11 @@ class HomeController extends Controller
     public function index()
     {
         $pricings = Pricing::where('email', Auth::user()->email)->get();
-
-        foreach ($pricings as $pricing) {
-            if ($pricing->status === 'Aktif' && $pricing->end_date) {
-                $daysRemaining = Carbon::now()->diffInDays($pricing->end_date, false);
-
-                // Kirim email pengingat 3 hari sebelum masa aktif berakhir
-                if ($daysRemaining <= 3 && $daysRemaining >= 0) {
-                    $today = Carbon::today();
-
-                    if (!$pricing->reminder_sent_at || $pricing->reminder_sent_at->lt($today)) {
-                        Mail::to($pricing->email)->send(new RenewalReminderMail($pricing, $daysRemaining));
-
-                        $pricing->reminder_sent_at = now();
-                        $pricing->save();
-                    }
-                }
-            }
-        }
-
-        // ✅ Ambil daftar paket dari master table
         $packages = Package::all();
 
         return view('home', compact('pricings', 'packages'));
     }
+
 
     public function create($id)
     {
