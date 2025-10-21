@@ -2,32 +2,34 @@
 
 namespace App\Mail;
 
-use Illuminate\Auth\Notifications\VerifyEmail as BaseVerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Carbon;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
 
-class CustomVerifyEmail extends BaseVerifyEmail
+class CustomVerifyEmail extends Mailable
 {
-    protected function verificationUrl($notifiable)
+    use SerializesModels;
+
+    public $user;
+
+    public function __construct($user)
     {
-        return URL::temporarySignedRoute(
-            'verification.verify',
-            Carbon::now()->addMinutes(60),
-            ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())]
-        );
+        $this->user = $user;
     }
 
-    public function toMail($notifiable)
+    public function build()
     {
-        $url = $this->verificationUrl($notifiable);
+        // Buat signed URL tanpa expired
+        $url = URL::signedRoute('verification.verify', [
+            'id' => $this->user->id,
+            'hash' => sha1($this->user->email),
+        ]);
 
-        return (new MailMessage)
-            ->subject('Verifikasi Akun Anda di ' . config('app.name'))
-            ->greeting('Halo ' . $notifiable->name . ' 👋')
-            ->line('Terima kasih telah mendaftar di ' . config('app.name') . '.')
-            ->line('Klik tombol di bawah ini untuk memverifikasi email Anda.')
-            ->action('Verifikasi Sekarang', $url)
-            ->line('Jika Anda tidak merasa mendaftar, abaikan pesan ini.');
+        return $this->subject('Verifikasi Akun Anda')
+            ->view('emails.verify')
+            ->with([
+                'name' => $this->user->name,
+                'verifyUrl' => $url,
+            ]);
     }
 }
