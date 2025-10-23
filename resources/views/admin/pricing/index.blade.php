@@ -26,6 +26,8 @@
                     <th>Paket</th>
                     <th>Email</th>
                     <th>Status</th>
+                    <th>Durasi</th>
+                    <th>Total Bayar</th>
                     <th>Bukti Bayar</th>
                     <th>Masa Aktif</th>
                     <th>Aksi Status</th> {{-- Kolom baru --}}
@@ -33,9 +35,27 @@
             </thead>
             <tbody>
                 @forelse ($pricings as $pricing)
+                    @php
+                        // Cek apakah ada renewal status 'waiting approval' untuk pricing ini
+                        $waitingRenewals = \App\Models\Renewal::where('pricing_id', $pricing->id)
+                            ->where('status', 'waiting approval')
+                            ->get();
+                    @endphp
                     <tr>
                         <td>{{ $loop->iteration + ($pricings->currentPage() - 1) * $pricings->perPage() }}</td>
-                        <td>{{ $pricing->namapaket }}</td>
+                        <td>
+                            @if ($waitingRenewals->isNotEmpty())
+                                @foreach ($waitingRenewals as $index => $renewal)
+                                    @php
+                                        // Ambil data paket berdasarkan new_package
+                                        $package = \App\Models\Package::find($renewal->new_package);
+                                    @endphp
+                                    {{ $package->name }}
+                                @endforeach
+                            @else
+                                {{ $pricing->namapaket }}
+                            @endif
+                        </td>
                         <td>{{ $pricing->email }}</td>
                         <td>
                             @php
@@ -59,7 +79,21 @@
                                 {{ $statusText }}
                             </span>
                         </td>
-
+                        <td>
+                            @if ($waitingRenewals->isNotEmpty())
+                                {{ $waitingRenewals->last()->duration }}
+                            @else
+                                {{ $pricing->durasi }}
+                            @endif
+                            bulan
+                        </td>
+                        <td>Rp
+                            @if ($waitingRenewals->isNotEmpty())
+                                {{ number_format($waitingRenewals->last()->total_price, 0, ',', '.') }}
+                            @else
+                                {{ number_format(($pricing->durasi ?? 0) * ($pricing->harga_paket ?? 0), 0, ',', '.') }}
+                            @endif
+                        </td>
                         <td>
                             @if ($pricing->bukti_transfer)
                                 <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
@@ -118,12 +152,12 @@
                         {{-- Kolom Aksi Status --}}
                         <td>
                             @if ($pricing->bukti_transfer)
-                                @php
+                                {{-- @php
                                     // Cek apakah ada renewal status 'waiting approval' untuk pricing ini
                                     $waitingRenewals = \App\Models\Renewal::where('pricing_id', $pricing->id)
                                         ->where('status', 'waiting approval')
                                         ->get();
-                                @endphp
+                                @endphp --}}
 
                                 @if ($waitingRenewals->isNotEmpty())
                                     <!-- Tombol untuk Aktifkan Perpanjangan -->
@@ -259,15 +293,41 @@
                                                             <input type="date" name="start_date"
                                                                 id="start_date{{ $pricing->id }}"
                                                                 class="form-control mb-3"
-                                                                value="{{ $pricing->start_date ? $pricing->start_date->format('Y-m-d') : '' }}">
+                                                                value="{{ now()->format('Y-m-d') }}">
 
                                                             <label for="end_date{{ $pricing->id }}"
-                                                                class="form-label">Tanggal
-                                                                Berakhir</label>
+                                                                class="form-label">Tanggal Berakhir</label>
                                                             <input type="date" name="end_date"
                                                                 id="end_date{{ $pricing->id }}" class="form-control"
-                                                                value="{{ $pricing->end_date ? $pricing->end_date->format('Y-m-d') : '' }}">
+                                                                readonly>
                                                         </div>
+
+                                                        <script>
+                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                                const startInput = document.getElementById('start_date{{ $pricing->id }}');
+                                                                const endInput = document.getElementById('end_date{{ $pricing->id }}');
+                                                                const durationMonths = {{ $pricing->durasi ?? 1 }}; // durasi dari tabel pricing (bulan)
+
+                                                                function updateEndDate() {
+                                                                    const startDate = new Date(startInput.value);
+                                                                    if (isNaN(startDate)) return; // jika tanggal belum valid
+
+                                                                    const endDate = new Date(startDate);
+                                                                    endDate.setMonth(endDate.getMonth() + durationMonths);
+
+                                                                    // Format YYYY-MM-DD
+                                                                    endInput.value = endDate.toISOString().split('T')[0];
+                                                                }
+
+                                                                // Set default saat pertama kali
+                                                                updateEndDate();
+
+                                                                // Update otomatis ketika start date berubah
+                                                                startInput.addEventListener('change', updateEndDate);
+                                                            });
+                                                        </script>
+
+
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"

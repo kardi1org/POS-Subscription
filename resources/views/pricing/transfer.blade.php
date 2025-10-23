@@ -5,9 +5,23 @@
         <h2>Transfer Pembayaran</h2>
 
         <p>Terima kasih telah mendaftar paket <strong>{{ $pricing->namapaket }}</strong>.</p>
-        <p>Silakan lakukan transfer ke rekening berikut:</p>
 
-        <div class="mb-4">
+        <div class="card mb-2 shadow-sm p-3">
+            <h5 class="mb-3">Detail Paket</h5>
+            <p><strong>Nama Paket:</strong> {{ $pricing->namapaket }}</p>
+            <p><strong>Durasi:</strong> {{ $pricing->durasi ?? '-' }} bulan</p>
+            <p><strong>Harga per Bulan:</strong>
+                Rp {{ number_format($pricing->harga_paket ?? 0, 0, ',', '.') }}
+            </p>
+            <p><strong>Total Harga:</strong>
+                <span class="text-success fw-bold">
+                    Rp {{ number_format(($pricing->durasi ?? 0) * ($pricing->harga_paket ?? 0), 0, ',', '.') }}
+                </span>
+            </p>
+        </div>
+
+        <p>Silakan lakukan transfer ke rekening berikut:</p>
+        <div class="mb-2">
             <strong>Bank:</strong> BCA <br>
             <strong>No Rekening:</strong> 1234567890 <br>
             <strong>Atas Nama:</strong> PT Contoh Perusahaan

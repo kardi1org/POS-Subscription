@@ -25,8 +25,8 @@ class SendRenewalReminders extends Command
         foreach ($pricings as $pricing) {
             $daysRemaining = Carbon::now()->diffInDays($pricing->end_date, false);
 
-            // Kirim email 3 hari sebelum masa aktif berakhir
-            if ($daysRemaining <= 3 && $daysRemaining >= 0) {
+            // Kirim email 7 hari sebelum masa aktif berakhir
+            if ($daysRemaining <= 7 && $daysRemaining >= 0) {
                 if (!$pricing->reminder_sent_at || $pricing->reminder_sent_at->lt($today)) {
                     try {
                         Mail::to($pricing->email)->send(new RenewalReminderMail($pricing, $daysRemaining));

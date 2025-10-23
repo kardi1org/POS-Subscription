@@ -7,7 +7,7 @@
 </head>
 
 <body style="font-family: Arial, sans-serif;">
-    <h2>Halo, {{ $pricing->email }}</h2>
+    <h2>Halo, {{ $pricing->user->name }}</h2>
     <p>
         Kami informasikan bahwa paket <strong>{{ $pricing->namapaket }}</strong> Anda telah <strong>aktif</strong>.
     </p>
