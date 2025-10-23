@@ -60,6 +60,8 @@ class HomeController extends Controller
         $pricing->email = $request->email;
         $pricing->codepaket = $request->codepaket;
         $pricing->namapaket = $request->namapaket;
+        $pricing->harga_paket = $request->harga_paket;
+        $pricing->durasi = $request->durasi;
         $pricing->notes = $request->notes;
         $pricing->status = 'Pending';
         $pricing->save();

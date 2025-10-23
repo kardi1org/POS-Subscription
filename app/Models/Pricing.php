@@ -14,6 +14,8 @@ class Pricing extends Model
     protected $fillable = [
         'codepaket',
         'namapaket',
+        'harga_paket',
+        'durasi',
         'email',
         'status',
         'bukti_transfer',
@@ -35,5 +37,10 @@ class Pricing extends Model
     public function package()
     {
         return $this->belongsTo(\App\Models\Package::class, 'codepaket');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'email', 'email');
     }
 }

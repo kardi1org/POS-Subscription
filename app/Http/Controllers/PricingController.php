@@ -10,6 +10,8 @@ use App\Mail\RenewalNotification;
 use App\Models\Renewal;
 use App\Models\Package;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Mail\BuktiTransferUploadedMail;
 
 
 class PricingController extends Controller
@@ -50,9 +52,17 @@ class PricingController extends Controller
                 $renewal->status = 'Waiting Approval';
                 $renewal->save();
             }
+            // Ambil semua email admin
+            $adminEmails = User::where('role', 'admin')->pluck('email')->toArray();
+
+            if (!empty($adminEmails)) {
+                // Kirim email sekaligus ke semua admin
+                Mail::to($adminEmails)
+                    ->send(new BuktiTransferUploadedMail($pricing, 'pricing'));
+            }
         }
 
-        return back()->with('success', 'Bukti pembayaran berhasil diupload!');
+        return back()->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi admin.');
     }
 
 
@@ -267,6 +277,15 @@ class PricingController extends Controller
                 $pricing->status = 'Waiting Approval';
                 $pricing->save();
             }
+
+            // Ambil semua email admin
+            $adminEmails = User::where('role', 'admin')->pluck('email')->toArray();
+
+            if (!empty($adminEmails)) {
+                // Kirim email ke semua admin — gunakan $renewal, bukan $pricing
+                Mail::to($adminEmails)
+                    ->send(new BuktiTransferUploadedMail($renewal, 'renewal'));
+            }
         }
 
         return redirect()->back()->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi admin.');
@@ -287,6 +306,13 @@ class PricingController extends Controller
         $renewal->status = 'Aktif';
         $renewal->approved_by = auth()->user()->email ?? 'Admin';
         $renewal->save();
+
+        // Tambah masa aktif sesuai pilihan
+        $months = (int) $renewal->duration;
+        // === Kirim email ke user ===
+        if ($pricing->email) {
+            Mail::to($pricing->email)->send(new \App\Mail\RenewalNotification($renewal, $months));
+        }
 
         return back()->with('success', 'Perpanjangan berhasil diaktifkan.');
     }

@@ -5,18 +5,18 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Pricing;
+use App\Models\Renewal;
 
 class RenewalNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $pricing;
+    public $renewal;
     public $months;
 
-    public function __construct(Pricing $pricing, $months)
+    public function __construct(Renewal $renewal, $months)
     {
-        $this->pricing = $pricing;
+        $this->renewal = $renewal;
         $this->months = $months;
     }
 

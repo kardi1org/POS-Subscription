@@ -29,10 +29,13 @@
                     <li>5 Email Accounts</li>
                     <li><b>$10 / month</b></li>
                 </ul>
+                <!-- Tambahkan data-harga -->
                 <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#signupModal" data-codepaket="1"
-                    data-namapaket="Basic">Sign Up</a>
-
+                    data-namapaket="Basic" data-harga="10"> <!-- harga per bulan dalam rupiah -->
+                    Sign Up
+                </a>
             </div>
+
 
             <div class="pricing-card pro">
                 <div class="header">Pro</div>
@@ -42,9 +45,11 @@
                     <li>25 Email Accounts</li>
                     <li><b>$25 / month</b></li>
                 </ul>
-                {{-- <a href="{{ route('pricing.create', ['id' => 2]) }}" class="button">Sign Up</a> --}}
+                <!-- Tambahkan data-harga -->
                 <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#signupModal" data-codepaket="2"
-                    data-namapaket="Pro">Sign Up</a>
+                    data-namapaket="Pro" data-harga="25"> <!-- harga per bulan dalam rupiah -->
+                    Sign Up
+                </a>
             </div>
 
             <div class="pricing-card premium">
@@ -55,8 +60,11 @@
                     <li>50 Email Accounts</li>
                     <li><b>$50 / month</b></li>
                 </ul>
+                <!-- Tambahkan data-harga -->
                 <a href="#" class="button" data-bs-toggle="modal" data-bs-target="#signupModal" data-codepaket="3"
-                    data-namapaket="Premium">Sign Up</a>
+                    data-namapaket="Premium" data-harga="50"> <!-- harga per bulan dalam rupiah -->
+                    Sign Up
+                </a>
             </div>
 
 
@@ -312,6 +320,7 @@
                                                             <option value="">-- Pilih Durasi --</option>
                                                             <option value="1">1 Bulan</option>
                                                             <option value="3">3 Bulan</option>
+                                                            <option value="6">6 Bulan</option>
                                                             <option value="12">1 Tahun</option>
                                                             <option value="24">2 Tahun</option>
                                                             <option value="36">3 Tahun</option>
@@ -369,7 +378,7 @@
                                 </div>
 
                                 <!-- 🔹 Tombol Riwayat Perpanjangan -->
-                                <button type="button" class="btn btn-info btn-sm ms-2" data-bs-toggle="modal"
+                                <button type="button" hidden class="btn btn-info btn-sm ms-2" data-bs-toggle="modal"
                                     data-bs-target="#historyModal{{ $pricing->id }}">
                                     <i class="bi bi-clock-history"></i> Riwayat
                                 </button>
@@ -462,13 +471,38 @@
                     <h5 class="modal-title" id="signupModalLabel">Sign Up for a Plan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
+
                 <div class="modal-body">
                     <input type="hidden" name="email" value="{{ Auth::user()->email }}" />
-
                     <input type="hidden" id="codepaket" name="codepaket" required readonly>
+
                     <div class="mb-2">
                         <input type="text" id="namapaket" name="namapaket" class="form-control" readonly required>
                     </div>
+
+                    <!-- Harga per bulan disembunyikan tapi ikut dikirim -->
+                    <input type="hidden" id="hargaPaket" name="harga_paket" readonly>
+
+                    <!-- Pilihan Durasi -->
+                    <div class="mb-3">
+                        <label for="durasi" class="form-label">Pilih Durasi Langganan</label>
+                        <select id="durasi" name="durasi" class="form-select" required>
+                            <option value="">-- Pilih Durasi --</option>
+                            <option value="1">1 Bulan</option>
+                            <option value="3">3 Bulan</option>
+                            <option value="6">6 Bulan</option>
+                            <option value="12">1 Tahun</option>
+                            <option value="24">2 Tahun</option>
+                            <option value="36">3 Tahun</option>
+                        </select>
+                    </div>
+
+                    <!-- Total Harga -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Total Harga:</label>
+                        <div id="totalHarga" class="fs-5 text-primary">Rp 0</div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="notes" class="form-label">Additional Notes</label>
                         <textarea id="notes" name="notes" class="form-control" rows="3"
@@ -479,10 +513,11 @@
                         <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active"
                             checked>
                         <label class="form-check-label" for="is_active">
-                            Aktifkan Langganan
+                            Daftar Langganan
                         </label>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
@@ -490,25 +525,44 @@
         </div>
     </div>
 @endsection
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const signupModal = document.getElementById('signupModal');
+
         if (signupModal) {
             signupModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
                 const codepaket = button.getAttribute('data-codepaket');
                 const namapaket = button.getAttribute('data-namapaket');
+                const harga = parseFloat(button.getAttribute('data-harga')) || 0;
 
                 document.getElementById('codepaket').value = codepaket;
                 document.getElementById('namapaket').value = namapaket;
+                document.getElementById('hargaPaket').value = harga;
 
                 signupModal.querySelector('.modal-title').textContent =
                     `Sign Up for Plan: ${namapaket}`;
+                document.getElementById('durasi').value = "";
+                document.getElementById('totalHarga').textContent = "Rp 0";
             });
+        }
+
+        // Hitung total harga saat pilih durasi
+        const durasiSelect = document.getElementById('durasi');
+        durasiSelect.addEventListener('change', function() {
+            const hargaPaket = parseFloat(document.getElementById('hargaPaket').value) || 0;
+            const durasi = parseInt(this.value) || 0;
+            const total = hargaPaket * durasi;
+
+            document.getElementById('totalHarga').textContent = formatRupiah(total);
+        });
+
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
     });
 </script>
+
 
 <script>
     function goToPayment(pricingId) {

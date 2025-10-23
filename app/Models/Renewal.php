@@ -28,14 +28,35 @@ class Renewal extends Model
         'new_end_date',
     ];
 
-    public function pricing()
-    {
-        return $this->belongsTo(Pricing::class);
-    }
+    // public function pricing()
+    // {
+    //     return $this->belongsTo(Pricing::class);
+    // }
 
 
     public function package()
     {
         return $this->belongsTo(\App\Models\Package::class, 'new_package', 'id');
+    }
+
+    public function pricing()
+    {
+        return $this->belongsTo(Pricing::class, 'pricing_id');
+    }
+
+    /**
+     * Relasi user diambil dari Pricing
+     */
+    public function user()
+    {
+        // lewat relasi pricing -> user
+        return $this->hasOneThrough(
+            User::class,       // model tujuan
+            Pricing::class,    // model perantara
+            'id',              // foreign key di Pricing (id Pricing)
+            'id',              // primary key di User
+            'pricing_id',      // foreign key di Renewal
+            'user_id'          // foreign key di Pricing
+        );
     }
 }
