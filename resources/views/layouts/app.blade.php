@@ -4,314 +4,126 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
+    <!-- Fonts & Bootstrap -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <!-- Tambahkan di bagian <head> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-
-
-
-
-    <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        .body-container {
-            font-family: Arial, sans-serif;
-            /* background: #f4f4f4; */
-            margin: 0;
-            padding: 10px;
-            text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 40px;
-        }
-
-        .pricing-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .pricing-card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s;
-            flex: 1 1 280px;
-            /* Responsive width */
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .pricing-card .header {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-            background: #4CAF50;
-            padding: 15px;
-            border-radius: 5px 5px 0 0;
-            margin: -20px -20px 20px -20px;
-        }
-
-        .pricing-card ul {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-        }
-
-        .pricing-card ul li {
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .pricing-card ul li:last-child {
-            border-bottom: none;
-        }
-
-        .pricing-card b {
-            font-size: 20px;
-            color: #333;
-        }
-
-        .button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .button:hover {
-            background-color: #45a049;
-        }
-
-        /* Optional: Color variants for each plan */
-        .pricing-card.basic .header {
-            background: #4CAF50;
-        }
-
-        /* Green */
-        .pricing-card.pro .header {
-            background: #2196F3;
-        }
-
-        /* Blue */
-        .pricing-card.premium .header {
-            background: #FF9800;
-        }
-
-        /* Orange */
-
-        /* Responsive: Stack cards on small screens */
-        @media (max-width: 768px) {
-            .pricing-container {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        /* Table Styling */
-        .table-container {
-            margin-top: 10px;
-            /* background: #fff; */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table thead {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        table th,
-        table td {
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        table tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-        }
-
-        .form-container {
-            margin-top: 20px;
-            max-width: 600px;
-            background: #fff;
-            padding: 30px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-left: auto;
-            margin-right: auto;
-            text-align: left;
-        }
-
-        .form-container h2 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-        }
-
-        .form-container .button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-        }
-    </style>
-    <style>
-        .pagination {
-            margin-top: 10px;
-            font-size: 0.875rem;
-            /* lebih kecil */
-        }
-    </style>
 
     <style>
         body {
-            background: #f9fafb;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f6fa;
+            font-family: 'Segoe UI', 'Nunito', sans-serif;
         }
 
-        h1,
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
+        /* === Navbar Modern === */
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar .nav-link {
             color: #374151;
+            font-weight: 500;
+            transition: color 0.2s ease;
         }
 
-        /* Pricing Cards */
+        .navbar .nav-link:hover {
+            color: #2563eb;
+        }
+
+        .navbar .fw-bold.text-primary {
+            color: #2563eb !important;
+        }
+
+        /* === Container Layout === */
+        main {
+            padding-top: 30px;
+        }
+
+        /* === Card Pricing Modern === */
         .pricing-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
         .pricing-card {
-            background: #ffffff;
+            background: #fff;
             border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            width: 280px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            padding: 28px 20px;
+            width: 300px;
             transition: all 0.3s ease;
-            text-align: center;
         }
 
         .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-6px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
         }
 
         .pricing-card .header {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #2563eb;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+
+        .pricing-card.basic .header {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .pricing-card.pro .header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .pricing-card.premium .header {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
         }
 
         .pricing-card ul {
             list-style: none;
             padding: 0;
-            margin-bottom: 20px;
             color: #4b5563;
         }
 
         .pricing-card li {
-            margin: 8px 0;
+            margin: 10px 0;
+            border-bottom: 1px dashed #e5e7eb;
+            padding-bottom: 6px;
         }
 
         .pricing-card .button {
-            display: inline-block;
-            background: #60a5fa;
+            background: #2563eb;
             color: #fff;
-            padding: 8px 16px;
+            border: none;
+            padding: 10px 16px;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: 500;
-            transition: background 0.2s ease;
+            font-weight: 600;
+            transition: background 0.2s;
         }
 
         .pricing-card .button:hover {
-            background: #3b82f6;
+            background: #1d4ed8;
         }
 
-        /* Table Style */
+        /* === Table Modern === */
         .table-container {
-            margin-top: 50px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px;
+            margin-top: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         }
 
         table {
@@ -320,128 +132,183 @@
         }
 
         thead {
-            background: #f3f4f6;
+            background-color: #f3f4f6;
         }
 
         thead th {
-            padding: 12px;
-            font-weight: 600;
             color: #374151;
+            font-weight: 600;
+            padding: 12px;
             border-bottom: 2px solid #e5e7eb;
+            text-align: center;
         }
 
         tbody td {
-            padding: 10px;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 12px;
             color: #4b5563;
-            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         tbody tr:hover {
-            background: #f9fafb;
+            background-color: #f9fafb;
         }
 
-        /* Button Soft Colors */
-        .btn-success {
-            background-color: #86efac !important;
+        /* === Form Container === */
+        .form-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px 24px;
+            max-width: 640px;
+            margin: 40px auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 0.95rem;
+            padding: 10px 12px;
+        }
+
+        .form-container .button {
+            width: 100%;
+            background: #2563eb;
+            color: white;
             border: none;
-            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .form-container .button:hover {
+            background: #1d4ed8;
+        }
+
+        /* === Buttons Variants === */
+        .btn-primary {
+            background-color: #2563eb !important;
+            color: #fff !important;
+            border: none;
+        }
+
+        .btn-success {
+            background-color: #22c55e !important;
+            color: #fff !important;
+            border: none;
         }
 
         .btn-warning {
-            background-color: #fde68a !important;
+            background-color: #f59e0b !important;
+            color: #fff !important;
             border: none;
-            color: #92400e;
-        }
-
-        .btn-primary {
-            background-color: #93c5fd !important;
-            border: none;
-            color: #1e3a8a;
         }
 
         .btn-secondary {
-            background-color: #e5e7eb !important;
+            background-color: #6b7280 !important;
+            color: #fff !important;
             border: none;
-            color: #374151;
         }
 
         .btn:hover {
             opacity: 0.9;
         }
+
+        .pagination {
+            margin-top: 10px;
+            font-size: 0.875rem;
+        }
+
+        /* === Footer Professional Gradient === */
+        footer {
+            /* background: linear-gradient(135deg, #e0edff 0%, #d5e7ff 40%, #cde2ff 100%); */
+            /* background: #ffffff; */
+            color: #374151;
+            text-align: center;
+            padding: 5px 0;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: outset 0 1px 3px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+        }
+
+        footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
-
-
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-expand-md sticky-top">
+            <div class="container-fluid px-4">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                    data-bs-target="#navbarSupportedContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
+                    <!-- Left -->
                     <ul class="navbar-nav me-auto">
-                        {{-- Menu Home --}}
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('/') ? 'fw-bold text-primary' : '' }}"
-                                href="{{ url('/') }}">
-                                Home
-                            </a>
+                                href="{{ url('/home') }}">Home</a>
                         </li>
-
-                        {{-- Menu Admin Dashboard hanya untuk admin --}}
                         @auth
                             @if (Auth::user()->role === 'admin')
                                 <li class="nav-item">
                                     <a class="nav-link {{ request()->is('admin/pricing*') ? 'fw-bold text-primary' : '' }}"
-                                        href="{{ route('admin.pricing.index') }}">
-                                        Admin Dashboard
-                                    </a>
+                                        href="{{ route('admin.pricing.index') }}">Admin Dashboard</a>
                                 </li>
                             @endif
                         @endauth
                     </ul>
 
-
-
-                    <!-- Right Side Of Navbar -->
+                    <!-- Right -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
                             @endif
-
                             @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle fw-semibold" href="#"
+                                    role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->name }}
                                 </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                <div class="dropdown-menu dropdown-menu-end shadow-sm">
+                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="bi bi-box-arrow-right me-1"></i>Logout
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
+                                        @csrf</form>
                                 </div>
                             </li>
                         @endguest
@@ -450,37 +317,21 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            {{-- Flash Message --}}
-            {{-- @if (session('success'))
-                <div class="alert alert-success text-center mx-auto" style="max-width: 600px;">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger text-center mx-auto" style="max-width: 600px;">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger mx-auto" style="max-width: 600px;">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif --}}
-
+        <!-- MAIN -->
+        <main class="py-2">
             @yield('content')
         </main>
+        <!-- FOOTER -->
+        <footer>
+            <div class="container">
+                <p class="mb-1">&copy; {{ date('Y') }} Dataprima. All rights reserved.</p>
 
+            </div>
+        </footer>
     </div>
-    <!-- SweetAlert CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         @if (session('success'))
             Swal.fire({
@@ -500,7 +351,6 @@
             });
         @endif
     </script>
-
 </body>
 
 </html>
