@@ -234,6 +234,29 @@
             margin-top: 10px;
             font-size: 0.875rem;
         }
+
+        /* === Footer Professional Gradient === */
+        footer {
+            /* background: linear-gradient(135deg, #e0edff 0%, #d5e7ff 40%, #cde2ff 100%); */
+            /* background: #ffffff; */
+            color: #374151;
+            text-align: center;
+            padding: 5px 0;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: outset 0 1px 3px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+        }
+
+        footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -241,7 +264,7 @@
     <div id="app">
         <!-- NAVBAR -->
         <nav class="navbar navbar-expand-md sticky-top">
-            <div class="container">
+            <div class="container-fluid px-4">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent">
                     <span class="navbar-toggler-icon"></span>
@@ -252,7 +275,7 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('/') ? 'fw-bold text-primary' : '' }}"
-                                href="{{ url('/') }}">Home</a>
+                                href="{{ url('/home') }}">Home</a>
                         </li>
                         @auth
                             @if (Auth::user()->role === 'admin')
@@ -298,6 +321,13 @@
         <main class="py-2">
             @yield('content')
         </main>
+        <!-- FOOTER -->
+        <footer>
+            <div class="container">
+                <p class="mb-1">&copy; {{ date('Y') }} Dataprima. All rights reserved.</p>
+
+            </div>
+        </footer>
     </div>
 
     <!-- SweetAlert -->

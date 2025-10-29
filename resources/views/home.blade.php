@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid px-2">
 
         {{-- HEADER --}}
         <div class="text-center mb-2">
@@ -43,8 +43,8 @@
         </div>
 
         {{-- SUBSCRIPTION STATUS TABLE --}}
-        <div class="bg-white rounded-4 shadow-sm p-4 mt-5">
-            <h4 class="fw-semibold text-center text-secondary mb-4">Subscription Status</h4>
+        <div class="bg-white rounded-4 shadow-sm p-3 mt-5">
+            <h4 class="fw-semibold text-center text-secondary mb-3">Subscription Status</h4>
             <div class="table-responsive">
                 <table class="table align-middle table-hover text-center">
                     <thead class="table-light">
