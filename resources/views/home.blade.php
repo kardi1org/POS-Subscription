@@ -55,6 +55,7 @@
                             <th>Proof</th>
                             <th>Active Period</th>
                             <th>Renewal</th>
+                            <th>Membership</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,8 +66,8 @@
                                 <td>
                                     @if (strtolower($pricing->status) === 'pending' || strtolower($pricing->status) === 'waiting approval')
                                         <span
-                                            class="badge bg-warning-subtle text-warning fw-semibold rounded-pill px-3">Waiting
-                                            Approval</span>
+                                            class="badge bg-warning-subtle text-warning fw-semibold rounded-pill px-3">Menunggu
+                                            Persetujuan Admin</span>
                                     @else
                                         <span
                                             class="badge bg-success-subtle text-success fw-semibold rounded-pill px-3">{{ ucfirst($pricing->status) }}</span>
@@ -368,7 +369,7 @@
                                         </div>
 
                                         <!-- 🔹 Tombol Riwayat Perpanjangan -->
-                                        <button type="button" hidden class="btn btn-info btn-sm ms-2"
+                                        <button type="button" hidden class="btn btn-info btn-sm ms-2 rounded-pill px-3"
                                             data-bs-toggle="modal" data-bs-target="#historyModal{{ $pricing->id }}">
                                             <i class="bi bi-clock-history"></i> Riwayat
                                         </button>
@@ -443,6 +444,220 @@
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
+                                <td class="text-center">
+                                    @if ($pricing->start_date && $pricing->end_date)
+                                        <!-- Tombol Add User -->
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2"
+                                            data-bs-toggle="modal" data-bs-target="#addUserModal{{ $pricing->id }}">
+                                            <i class="bi bi-person-plus"></i> Add
+                                        </button>
+
+                                        <!-- Tombol View User -->
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                                            data-bs-toggle="modal" data-bs-target="#viewUserModal{{ $pricing->id }}">
+                                            <i class="bi bi-people"></i> View
+                                        </button>
+
+                                        <!-- Modal Add User -->
+                                        <div class="modal fade" id="addUserModal{{ $pricing->id }}" tabindex="-1"
+                                            aria-labelledby="addUserModalLabel{{ $pricing->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form method="POST" action="{{ route('membership.store') }}">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="addUserModalLabel{{ $pricing->id }}">
+                                                                Tambah User Membership
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="pricing_id"
+                                                                value="{{ $pricing->id }}">
+                                                            {{-- <input type="hidden" name="db_database"
+                                                            value="{{ $pricing->user->DB_DATABASE }}">
+                                                        <input type="hidden" name="db_host"
+                                                            value="{{ $pricing->user->DB_HOST }}">
+                                                        <input type="hidden" name="db_port"
+                                                            value="{{ $pricing->user->DB_PORT }}"> --}}
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Nama Lengkap</label>
+                                                                <input type="text" name="name" class="form-control"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Email</label>
+                                                                <input type="email" name="email" class="form-control"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Password</label>
+                                                                <input type="password" name="userpassword"
+                                                                    class="form-control" required>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Level</label>
+                                                                <select name="level" class="form-select" required>
+                                                                    <option value="">-- Pilih Level --</option>
+                                                                    <option value="admin">Admin</option>
+                                                                    <option value="kasir">Kasir</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- View User Modal -->
+                                        <div class="modal fade" id="viewUserModal{{ $pricing->id }}" tabindex="-1"
+                                            aria-labelledby="viewUserModalLabel{{ $pricing->id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-primary text-white">
+                                                        <h5 class="modal-title"
+                                                            id="viewUserModalLabel{{ $pricing->id }}">
+                                                            User Membership - {{ $pricing->namapaket }}
+                                                        </h5>
+                                                        <button type="button" class="btn-close btn-close-white"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        @php
+                                                            $users = \App\Models\MembershipUser::where(
+                                                                'pricing_id',
+                                                                $pricing->id,
+                                                            )->get();
+                                                        @endphp
+
+                                                        @if ($users->isEmpty())
+                                                            <p class="text-muted text-center mb-0">Belum ada user
+                                                                membership.
+                                                            </p>
+                                                        @else
+                                                            <div class="table-responsive">
+                                                                <table
+                                                                    class="table table-striped align-middle text-center mb-0">
+                                                                    <thead class="table-light">
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Nama</th>
+                                                                            <th>Email</th>
+                                                                            <th>Level</th>
+                                                                            <th>Dibuat</th>
+                                                                            <th>Aksi</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($users as $muser)
+                                                                            <tr>
+                                                                                <td>{{ $loop->iteration }}</td>
+                                                                                <td>{{ $muser->name }}</td>
+                                                                                <td>{{ $muser->email }}</td>
+                                                                                <td>{{ ucfirst($muser->level) }}</td>
+                                                                                <td>{{ $muser->created_at->format('d M Y H:i') }}
+                                                                                </td>
+                                                                                <td>
+                                                                                    <!-- Tombol Edit -->
+                                                                                    <button type="button"
+                                                                                        class="btn btn-sm btn-outline-primary me-1"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#editMembershipModal{{ $muser->id }}">
+                                                                                        <i class="bi bi-pencil-square"></i>
+                                                                                    </button>
+
+                                                                                    <!-- Tombol Hapus -->
+                                                                                    <form
+                                                                                        action="{{ route('membership.destroy', $muser->id) }}"
+                                                                                        method="POST" class="d-inline">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-sm btn-outline-danger"
+                                                                                            onclick="return confirm('Yakin ingin menghapus user ini?')">
+                                                                                            <i class="bi bi-trash"></i>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal Edit User DITARUH DI LUAR modal view user -->
+                                        @foreach ($users as $muser)
+                                            <div class="modal fade" id="editMembershipModal{{ $muser->id }}"
+                                                tabindex="-1"
+                                                aria-labelledby="editMembershipModalLabel{{ $muser->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content border-0 shadow-lg">
+                                                        <div class="modal-header bg-primary text-white">
+                                                            <h5 class="modal-title"
+                                                                id="editMembershipModalLabel{{ $muser->id }}">
+                                                                Edit User Membership
+                                                            </h5>
+                                                            <button type="button" class="btn-close btn-close-white"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+
+                                                        <form action="{{ route('membership.update', $muser->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">Nama</label>
+                                                                    <input type="text" name="name"
+                                                                        class="form-control" value="{{ $muser->name }}"
+                                                                        required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">Level</label>
+                                                                    <select name="level" class="form-select" required>
+                                                                        <option value="admin"
+                                                                            {{ $muser->level == 'admin' ? 'selected' : '' }}>
+                                                                            Admin</option>
+                                                                        <option value="kasir"
+                                                                            {{ $muser->level == 'kasir' ? 'selected' : '' }}>
+                                                                            Kasir</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-primary">Simpan
+                                                                    Perubahan</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+
                             </tr>
                         @empty
                             <tr>

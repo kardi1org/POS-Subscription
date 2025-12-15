@@ -72,7 +72,7 @@
                                             };
                                         @endphp
                                         <span class="badge {{ $badgeColor }} fw-semibold rounded-pill px-3">
-                                            {{ $pricing->status === 'Pending' ? 'Waiting Approval' : ucfirst($pricing->status) }}
+                                            {{ $pricing->status === 'Pending' || $pricing->status === 'Waiting Approval' ? 'Menunggu Persetujuan' : ucfirst($pricing->status) }}
                                         </span>
                                     </td>
                                     <td>
@@ -272,7 +272,7 @@
                                                                         id="statusSelect{{ $pricing->id }}" required>
                                                                         <option value="waiting approval"
                                                                             {{ $pricing->status === 'waiting approval' ? 'selected' : '' }}>
-                                                                            Waiting Approval
+                                                                            Menunggu Persetujuan
                                                                         </option>
                                                                         <option value="aktif"
                                                                             {{ $pricing->status === 'aktif' ? 'selected' : '' }}>

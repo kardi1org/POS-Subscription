@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RenewalLogController;
 use App\Http\Controllers\PricingController;
+use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\RenewalLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,9 @@ Route::post('/pricing/{id}/renew', [App\Http\Controllers\PricingController::clas
 Route::post('/pricing/{id}/proceed-payment', [App\Http\Controllers\PricingController::class, 'proceedPayment'])->name('pricing.proceedPayment');
 Route::get('/pricing/payment/{renewal}', [App\Http\Controllers\PricingController::class, 'paymentPage'])->name('pricing.paymentPage');
 Route::post('/pricing/payment/{renewal}/upload', [App\Http\Controllers\PricingController::class, 'uploadProof'])->name('pricing.uploadProof');
+Route::post('/membership/store', [MembershipController::class, 'store'])->name('membership.store');
+Route::post('/membership/update/{id}', [MembershipController::class, 'update'])->name('membership.update');
+Route::delete('/membership/delete/{id}', [MembershipController::class, 'destroy'])->name('membership.destroy');
 
 
 Route::middleware(['auth'])->group(function () {
