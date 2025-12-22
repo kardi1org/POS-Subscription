@@ -29,7 +29,7 @@ class BuktiTransferUploadedMail extends Mailable
         if ($this->type === 'renewal') {
             $pricing = $this->renewal->pricing;
 
-            return $this->subject('Bukti Transfer Perpanjangan Menunggu Verifikasi')
+            return $this->subject('Bukti Transfer Perpanjangan/Upgrade Menunggu Verifikasi')
                 ->view('emails.bukti_transfer_uploaded')
                 ->with([
                     'userName' => $pricing->email,

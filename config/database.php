@@ -93,6 +93,21 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        // 🔹 DB POS
+        'db_pos' => [
+            'driver' => 'mysql',
+            'host' => env('DB_POS_HOST', '127.0.0.1'),
+            'port' => env('DB_POS_PORT', '3306'),
+            'database' => env('DB_POS_DATABASE', 'db_pos'),
+            'username' => env('DB_POS_USERNAME', 'root'),
+            'password' => env('DB_POS_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
     ],
 
     /*
@@ -125,7 +140,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

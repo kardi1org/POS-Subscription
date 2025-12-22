@@ -9,8 +9,8 @@
         <div class="card mb-2 shadow-sm p-3">
             <h5 class="mb-3">Detail Paket</h5>
             <p><strong>Nama Paket:</strong> {{ $pricing->namapaket }}</p>
-            <p><strong>Durasi:</strong> {{ $pricing->durasi ?? '-' }} bulan</p>
-            <p><strong>Harga per Bulan:</strong>
+            <p><strong>Durasi:</strong> {{ $pricing->durasi * 30 ?? '-' }} hari</p>
+            <p><strong>Harga per 30 hari:</strong>
                 Rp {{ number_format($pricing->harga_paket ?? 0, 0, ',', '.') }}
             </p>
             <p><strong>Total Harga:</strong>

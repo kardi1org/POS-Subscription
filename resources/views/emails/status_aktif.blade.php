@@ -11,8 +11,10 @@
     <p>
         Kami informasikan bahwa paket <strong>{{ $pricing->namapaket }}</strong> Anda telah <strong>aktif</strong>.
     </p>
-    <p>Masa aktif: {{ $pricing->start_date->format('d M Y') }} s/d {{ $pricing->end_date->format('d M Y') }}</p>
-    <p>Terima kasih telah bergabung bersama kami 🎉</p>
+    <p>Masa aktif: {{ optional($pricing->start_date)->format('d M Y') ?? '-' }} s/d
+        {{ optional($pricing->end_date)->format('d M Y') ?? '-' }}
+    </p>
+    <p>Terima kasih telah bergabung bersama kami</p>
 </body>
 
 </html>

@@ -61,7 +61,7 @@
 
 <body>
     <div class="container">
-        <h2>Halo {{ $name ?? 'Pengguna' }}, 👋</h2>
+        <h2>Halo {{ $name ?? 'Pengguna' }},</h2>
 
         <p>Terima kasih telah mendaftar di <strong>POS Dataprima</strong>.</p>
         <p>Silakan klik tombol di bawah ini untuk memverifikasi alamat email Anda:</p>

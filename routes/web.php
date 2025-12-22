@@ -48,7 +48,7 @@ Route::post('/pricing/payment/{renewal}/upload', [App\Http\Controllers\PricingCo
 Route::post('/membership/store', [MembershipController::class, 'store'])->name('membership.store');
 Route::post('/membership/update/{id}', [MembershipController::class, 'update'])->name('membership.update');
 Route::delete('/membership/delete/{id}', [MembershipController::class, 'destroy'])->name('membership.destroy');
-
+Route::post('/pricing/{id}/preview', [PricingController::class, 'previewPrice'])->name('pricing.preview');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/my-renewals', [RenewalLogController::class, 'index'])->name('user.renewals');
