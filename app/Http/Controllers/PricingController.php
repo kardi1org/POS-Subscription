@@ -34,39 +34,63 @@ class PricingController extends Controller
             'bukti' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        // Ambil data pricing
         $pricing = Pricing::findOrFail($id);
 
         if ($request->hasFile('bukti')) {
-            // Simpan file ke folder storage/app/public/bukti-transfer
+
+            // ===============================
+            // 🔥 HAPUS FILE LAMA (PRICING)
+            // ===============================
+            if ($pricing->bukti_transfer && Storage::disk('public')->exists($pricing->bukti_transfer)) {
+                Storage::disk('public')->delete($pricing->bukti_transfer);
+            }
+
+            // ===============================
+            // SIMPAN FILE BARU
+            // ===============================
             $path = $request->file('bukti')->store('bukti-transfer', 'public');
 
-            // Update bukti_transfer di tabel pricing
-            $pricing->bukti_transfer = $path;
-            $pricing->status = 'Waiting Approval'; // otomatis ubah status
-            $pricing->save();
+            // Update pricing
+            $pricing->update([
+                'bukti_transfer' => $path,
+                'status'         => 'Waiting Approval',
+            ]);
 
-            // Update juga di tabel renewals berdasarkan pricing_id
-            $renewal = \App\Models\Renewal::where('pricing_id', $pricing->id)
-                ->latest() // ambil renewal terakhir
+            // ===============================
+            // UPDATE RENEWAL TERAKHIR
+            // ===============================
+            $renewal = Renewal::where('pricing_id', $pricing->id)
+                ->latest()
                 ->first();
 
             if ($renewal) {
-                $renewal->bukti_transfer = $path;
-                $renewal->status = 'Waiting Approval';
-                $renewal->save();
+
+                // 🔥 HAPUS FILE LAMA (RENEWAL)
+                if ($renewal->bukti_transfer && Storage::disk('public')->exists($renewal->bukti_transfer)) {
+                    Storage::disk('public')->delete($renewal->bukti_transfer);
+                }
+
+                $renewal->update([
+                    'bukti_transfer' => $path,
+                    'status'         => 'Waiting Approval',
+                ]);
             }
-            // Ambil semua email admin
+
+            // ===============================
+            // KIRIM EMAIL KE ADMIN
+            // ===============================
             $adminEmails = User::where('role', 'admin')->pluck('email')->toArray();
 
             if (!empty($adminEmails)) {
-                // Kirim email sekaligus ke semua admin
                 Mail::to($adminEmails)
                     ->send(new BuktiTransferUploadedMail($pricing, 'pricing'));
             }
         }
 
-        return back()->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi admin.');
+        return back()->with(
+            'success',
+            'Bukti pembayaran berhasil diupload. Menunggu verifikasi admin.'
+        );
     }
 
 
@@ -99,7 +123,7 @@ class PricingController extends Controller
         $databases = collect(DB::select("SHOW DATABASES"))
             ->pluck('Database')
             ->filter(function ($db) use ($usedDatabases) {
-                return str_contains(strtolower($db), 'pos')
+                return str_contains(strtolower($db), '_pos')
                     && !in_array(strtolower($db), $usedDatabases);
             })
             ->values();
@@ -153,6 +177,7 @@ class PricingController extends Controller
                 ->where('id', $mainUser->id)
                 ->update([
                     'db_host'     => $request->db_host ?? '127.0.0.1',
+                    'db_port'     => '3306',
                     'db_database' => $request->db_database,
                     'db_username' => $request->db_username,
                     'db_password' => $encryptedPassword, // ✅ MENGGUNAKAN CRYPT
