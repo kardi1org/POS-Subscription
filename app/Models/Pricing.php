@@ -19,7 +19,9 @@ class Pricing extends Model
         'email',
         'status',
         'bukti_transfer',
-        'reminder_sent_at', // ← wajib ditambahkan
+        'reminder_sent_at',
+        'start_date',
+        'end_date',
     ];
 
     protected $casts = [

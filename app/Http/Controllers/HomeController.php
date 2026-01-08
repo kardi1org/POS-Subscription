@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RenewalReminderMail;
 use Carbon\Carbon;
+use App\Mail\InvoiceSignupMail;
 
 class HomeController extends Controller
 {
@@ -52,21 +53,37 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required',
-            'codepaket' => 'required'
+            'email'        => 'required|email',
+            'codepaket'    => 'required|exists:packages,id',
+            'harga_paket'  => 'required|numeric',
+            'durasi'       => 'required|integer|min:1',
         ]);
 
-        $pricing = new Pricing;
-        $pricing->email = $request->email;
-        $pricing->codepaket = $request->codepaket;
-        $pricing->namapaket = $request->namapaket;
-        $pricing->harga_paket = $request->harga_paket;
-        $pricing->durasi = $request->durasi;
-        $pricing->notes = $request->notes;
-        $pricing->status = 'Pending';
-        $pricing->save();
+        // Ambil paket
+        $package = Package::findOrFail($request->codepaket);
 
-        //session()->flash('success', 'Pendaftaran Paket ' . $pricing->namapaket . ' Sukses');
-        return redirect()->route('pricing.transfer', ['id' => $pricing->id])->with('success', 'Pendaftaran Paket ' . $pricing->namapaket . ' Sukses');
+        // Hitung total
+        $totalPrice = $request->harga_paket * $request->durasi;
+        $durationDays = $request->durasi * 30;
+
+        // Simpan pricing
+        $pricing = Pricing::create([
+            'email'        => $request->email,
+            'codepaket'    => $package->id,
+            'namapaket'    => $package->name,
+            'harga_paket'  => $request->harga_paket,
+            'durasi'       => $request->durasi,
+            'notes'        => $request->notes,
+            'status'       => 'Pending',
+        ]);
+
+        // Kirim Email Invoice Signup
+        Mail::to($pricing->email)->send(
+            new InvoiceSignupMail($pricing, $package, $totalPrice, $durationDays)
+        );
+
+        return redirect()
+            ->route('pricing.transfer', ['id' => $pricing->id])
+            ->with('success', 'Pendaftaran Paket ' . $pricing->namapaket . ' berhasil. Invoice telah dikirim ke email.');
     }
 }

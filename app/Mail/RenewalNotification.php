@@ -22,7 +22,7 @@ class RenewalNotification extends Mailable
 
     public function build()
     {
-        return $this->subject('Perpanjangan Masa Aktif Berhasil')
+        return $this->subject('Perpanjangan/Upgrade Masa Aktif Berhasil')
             ->markdown('emails.renewal');
     }
 }

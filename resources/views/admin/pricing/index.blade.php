@@ -72,13 +72,16 @@
                                             };
                                         @endphp
                                         <span class="badge {{ $badgeColor }} fw-semibold rounded-pill px-3">
-                                            {{ $pricing->status === 'Pending' ? 'Waiting Approval' : ucfirst($pricing->status) }}
+                                            {{ $pricing->status === 'Pending' || $pricing->status === 'Waiting Approval' ? 'Menunggu Persetujuan' : ucfirst($pricing->status) }}
                                         </span>
                                     </td>
-                                    <td>
-                                        {{ $waitingRenewals->isNotEmpty() ? $waitingRenewals->last()->duration : $pricing->durasi }}
-                                        bulan
-                                    </td>
+                                    @php
+                                        $durasiHari = $waitingRenewals->isNotEmpty()
+                                            ? $waitingRenewals->last()->duration
+                                            : $pricing->durasi;
+                                    @endphp
+                                    <td>{{ $durasiHari * 30 }} Hari</td>
+
                                     <td>Rp
                                         {{ number_format(
                                             $waitingRenewals->isNotEmpty()
@@ -151,7 +154,7 @@
                                             @if ($waitingRenewals->isNotEmpty())
                                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                                     data-bs-target="#waitingRenewalModal{{ $pricing->id }}">
-                                                    <i class="bi bi-hourglass-split"></i> Aktifkan Perpanjangan
+                                                    <i class="bi bi-hourglass-split"></i> Aktifkan
                                                 </button>
                                                 <!-- Modal Daftar Perpanjangan Waiting Approval -->
                                                 <div class="modal fade" id="waitingRenewalModal{{ $pricing->id }}"
@@ -163,8 +166,7 @@
                                                             <div class="modal-header bg-warning text-dark">
                                                                 <h5 class="modal-title"
                                                                     id="waitingRenewalModalLabel{{ $pricing->id }}">
-                                                                    Daftar Perpanjangan Menunggu Persetujuan
-                                                                    ({{ $pricing->namapaket }})
+                                                                    Daftar Perpanjangan/Upgrade Menunggu Persetujuan
                                                                 </h5>
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -195,7 +197,7 @@
 
                                                                                 <td>{{ $package ? $package->name : '-' }}
                                                                                 </td>
-                                                                                <td>{{ $renewal->duration }} bulan</td>
+                                                                                <td>{{ $renewal->duration * 30 }} hari</td>
                                                                                 <td>{{ $renewal->new_end_date ? \Carbon\Carbon::parse($renewal->new_end_date)->format('d M Y') : '-' }}
                                                                                 </td>
                                                                                 <td>Rp
@@ -272,7 +274,7 @@
                                                                         id="statusSelect{{ $pricing->id }}" required>
                                                                         <option value="waiting approval"
                                                                             {{ $pricing->status === 'waiting approval' ? 'selected' : '' }}>
-                                                                            Waiting Approval
+                                                                            Menunggu Persetujuan
                                                                         </option>
                                                                         <option value="aktif"
                                                                             {{ $pricing->status === 'aktif' ? 'selected' : '' }}>
@@ -301,31 +303,75 @@
                                                                             class="form-control" readonly>
                                                                     </div>
 
+                                                                    {{-- Konfigurasi Database POS (muncul hanya jika status aktif) --}}
+                                                                    <div id="dbConfigContainer{{ $pricing->id }}"
+                                                                        style="display:none;">
+                                                                        <hr>
+
+                                                                        <h6 class="fw-semibold mb-3">Konfigurasi Database
+                                                                            POS</h6>
+
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">DB Host</label>
+                                                                            <input type="text" name="db_host"
+                                                                                class="form-control"
+                                                                                placeholder="127.0.0.1">
+                                                                        </div>
+
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">DB Database</label>
+                                                                            <select name="db_database"
+                                                                                class="form-select">
+                                                                                <option value="">-- Pilih Database
+                                                                                    POS --</option>
+                                                                                @foreach ($databases as $db)
+                                                                                    <option value="{{ $db }}">
+                                                                                        {{ $db }}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">DB Username</label>
+                                                                            <input type="text" name="db_username"
+                                                                                class="form-control">
+                                                                        </div>
+
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">DB Password</label>
+                                                                            <input type="password" name="db_password"
+                                                                                class="form-control">
+                                                                        </div>
+                                                                    </div>
+
                                                                     <script>
                                                                         document.addEventListener('DOMContentLoaded', function() {
-                                                                            const startInput = document.getElementById('start_date{{ $pricing->id }}');
-                                                                            const endInput = document.getElementById('end_date{{ $pricing->id }}');
-                                                                            const durationMonths = {{ $pricing->durasi ?? 1 }}; // durasi dari tabel pricing (bulan)
+                                                                            const modal = document.getElementById('statusModal{{ $pricing->id }}');
 
-                                                                            function updateEndDate() {
-                                                                                const startDate = new Date(startInput.value);
-                                                                                if (isNaN(startDate)) return; // jika tanggal belum valid
+                                                                            modal.addEventListener('shown.bs.modal', function() {
+                                                                                const startInput = document.getElementById('start_date{{ $pricing->id }}');
+                                                                                const endInput = document.getElementById('end_date{{ $pricing->id }}');
 
-                                                                                const endDate = new Date(startDate);
-                                                                                endDate.setMonth(endDate.getMonth() + durationMonths);
+                                                                                const durationDays = {{ ($pricing->durasi ?? 1) * 30 }};
 
-                                                                                // Format YYYY-MM-DD
-                                                                                endInput.value = endDate.toISOString().split('T')[0];
-                                                                            }
+                                                                                function updateEndDate() {
+                                                                                    if (!startInput.value) return;
 
-                                                                            // Set default saat pertama kali
-                                                                            updateEndDate();
+                                                                                    const startDate = new Date(startInput.value);
+                                                                                    const endDate = new Date(startDate);
+                                                                                    endDate.setDate(endDate.getDate() + durationDays);
 
-                                                                            // Update otomatis ketika start date berubah
-                                                                            startInput.addEventListener('change', updateEndDate);
+                                                                                    endInput.value = endDate.toISOString().split('T')[0];
+                                                                                }
+
+                                                                                // hitung saat modal dibuka
+                                                                                updateEndDate();
+
+                                                                                // hitung ulang jika tanggal mulai berubah
+                                                                                startInput.addEventListener('change', updateEndDate);
+                                                                            });
                                                                         });
                                                                     </script>
-
 
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -340,7 +386,7 @@
                                                 </div>
 
                                                 {{-- Script untuk tampilkan input masa aktif hanya jika status aktif --}}
-                                                <script>
+                                                {{-- <script>
                                                     document.addEventListener("DOMContentLoaded", function() {
                                                         const select{{ $pricing->id }} = document.getElementById('statusSelect{{ $pricing->id }}');
                                                         const masaAktifContainer{{ $pricing->id }} = document.getElementById(
@@ -353,6 +399,22 @@
 
                                                         select{{ $pricing->id }}.addEventListener('change', toggleMasaAktif);
                                                         toggleMasaAktif(); // Jalankan saat modal dibuka pertama kali
+                                                    });
+                                                </script> --}}
+                                                <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        const select{{ $pricing->id }} = document.getElementById('statusSelect{{ $pricing->id }}');
+                                                        const masaAktif{{ $pricing->id }} = document.getElementById('masaAktifContainer{{ $pricing->id }}');
+                                                        const dbConfig{{ $pricing->id }} = document.getElementById('dbConfigContainer{{ $pricing->id }}');
+
+                                                        function toggleFields() {
+                                                            const isActive = select{{ $pricing->id }}.value === 'aktif';
+                                                            masaAktif{{ $pricing->id }}.style.display = isActive ? 'block' : 'none';
+                                                            dbConfig{{ $pricing->id }}.style.display = isActive ? 'block' : 'none';
+                                                        }
+
+                                                        select{{ $pricing->id }}.addEventListener('change', toggleFields);
+                                                        toggleFields();
                                                     });
                                                 </script>
                                             @else

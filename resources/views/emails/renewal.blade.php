@@ -55,14 +55,14 @@
 
 <body>
     <div class="container">
-        <h2>Perpanjangan Masa Aktif Berhasil 🎉</h2>
+        <h2>Perpanjangan/Upgrade Masa Aktif Berhasil</h2>
 
         <p>Halo <strong>{{ $renewal->pricing->user->name ?? 'Pengguna' }}</strong>,</p>
 
         <p>
             Terima kasih telah memperpanjang langganan Anda.
             Paket <strong>{{ $renewal->package->name }}</strong> kini aktif kembali untuk
-            <strong>{{ $months }}</strong> bulan ke depan.
+            <strong>{{ $months * 30 }}</strong> hari ke depan.
         </p>
 
         <div class="highlight">

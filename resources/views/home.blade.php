@@ -18,8 +18,8 @@
                             <h4 class="fw-semibold mb-3 text-primary">{{ $package->name }}</h4>
                             <p class="text-secondary small mb-4">
                                 {{ $package->description ?? 'All essential features for getting started.' }}</p>
-                            <h2 class="fw-bold text-dark mb-0">${{ $package->price }}</h2>
-                            <small class="text-muted">/ month</small>
+                            <h2 class="fw-bold text-dark mb-0">Rp {{ number_format($package->price, 0, ',', '.') }}</h2>
+                            <small class="text-muted">/ 30 days</small>
                             <hr class="my-4">
                             <ul class="list-unstyled text-start small text-secondary mb-4">
                                 <li class="mb-2"><i class="bi bi-hdd me-2 text-primary"></i>{{ $package->disk_space }}
@@ -31,11 +31,23 @@
                                         class="bi bi-envelope me-2 text-primary"></i>{{ $package->email_accounts }} Email
                                     Accounts</li>
                             </ul>
-                            <button class="btn btn-gradient w-100 fw-semibold rounded-pill py-2" data-bs-toggle="modal"
-                                data-bs-target="#signupModal" data-codepaket="{{ $package->id }}"
-                                data-namapaket="{{ $package->name }}" data-harga="{{ $package->price }}">
-                                <i class="bi bi-cart-plus me-1"></i> Get Started
-                            </button>
+                            @forelse ($pricings as $pricing)
+                                {{-- @if ($pricing->status === 'Aktif')
+                                    <button class="btn btn-outline-dark btn-sm rounded-pill px-3" data-bs-toggle="modal"
+                                        data-bs-target="#renewModal{{ $pricing->id }}">
+                                        <i class="bi bi-arrow-repeat"></i> Renew
+                                    </button>
+                                @else
+                                    <span class="text-muted">-</span>
+                                    @endif --}}
+                                <span class="text-muted">-</span>
+                            @empty
+                                <button class="btn btn-gradient w-100 fw-semibold rounded-pill py-2" data-bs-toggle="modal"
+                                    data-bs-target="#signupModal" data-codepaket="{{ $package->id }}"
+                                    data-namapaket="{{ $package->name }}" data-harga="{{ $package->price }}">
+                                    <i class="bi bi-cart-plus me-1"></i> Get Started
+                                </button>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -55,6 +67,7 @@
                             <th>Proof</th>
                             <th>Active Period</th>
                             <th>Renewal</th>
+                            <th>Membership</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,8 +78,8 @@
                                 <td>
                                     @if (strtolower($pricing->status) === 'pending' || strtolower($pricing->status) === 'waiting approval')
                                         <span
-                                            class="badge bg-warning-subtle text-warning fw-semibold rounded-pill px-3">Waiting
-                                            Approval</span>
+                                            class="badge bg-warning-subtle text-warning fw-semibold rounded-pill px-3">Menunggu
+                                            Persetujuan Admin</span>
                                     @else
                                         <span
                                             class="badge bg-success-subtle text-success fw-semibold rounded-pill px-3">{{ ucfirst($pricing->status) }}</span>
@@ -275,18 +288,6 @@
                                                             <!-- Pilih Paket -->
                                                             <div class="mb-3">
                                                                 <label class="form-label">Pilih Paket</label>
-                                                                {{-- <select class="form-select" name="package_id"
-                                                            id="packageSelect{{ $pricing->id }}" required>
-                                                            <option value="">-- Pilih Paket --</option>
-                                                            @foreach ($packages as $package)
-                                                                <option value="{{ $package->id }}"
-                                                                    data-price="{{ $package->price }}"
-                                                                    {{ $pricing->package_id == $package->id ? 'selected' : '' }}>
-                                                                    {{ $package->name }} - Rp
-                                                                    {{ number_format($package->price, 0, ',', '.') }}/bulan
-                                                                </option>
-                                                            @endforeach
-                                                        </select> --}}
                                                                 <select class="form-select" name="package_id"
                                                                     id="packageSelect{{ $pricing->id }}" required>
                                                                     @foreach ($packages as $package)
@@ -294,7 +295,9 @@
                                                                             data-price="{{ $package->price }}"
                                                                             {{ $package->id == $pricing->codepaket ? 'selected' : '' }}>
                                                                             {{ $package->name }} - Rp
-                                                                            {{ number_format($package->price, 0, ',', '.') }}/bulan
+                                                                            {{ number_format($package->price, 0, ',', '.') }}
+                                                                            / 30
+                                                                            days
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
@@ -307,68 +310,42 @@
                                                                 <select class="form-select" name="duration"
                                                                     id="durationSelect{{ $pricing->id }}" required>
                                                                     <option value="">-- Pilih Durasi --</option>
-                                                                    <option value="1">1 Bulan</option>
-                                                                    <option value="3">3 Bulan</option>
-                                                                    <option value="6">6 Bulan</option>
-                                                                    <option value="12">1 Tahun</option>
-                                                                    <option value="24">2 Tahun</option>
-                                                                    <option value="36">3 Tahun</option>
+                                                                    <option value="1">30 Hari</option>
+                                                                    <option value="3">90 Hari</option>
+                                                                    <option value="6">180 Hari</option>
+                                                                    <option value="12">360 Hari</option>
+                                                                    <option value="24">720 Hari</option>
+                                                                    <option value="36">1080 Hari</option>
+
                                                                 </select>
                                                             </div>
 
-                                                            <!-- Total Harga -->
-                                                            <div id="totalContainer{{ $pricing->id }}"
-                                                                class="text-center fw-bold fs-5 text-success d-none">
-                                                                Total: Rp <span
-                                                                    id="totalPrice{{ $pricing->id }}">0</span>
+                                                            <div id="pricePreview{{ $pricing->id }}"
+                                                                class="alert d-none mt-3"></div>
+
+                                                            <div id="downgradeWarning{{ $pricing->id }}"
+                                                                class="alert alert-danger mt-3 d-none">
+                                                                🚫 Downgrade paket tidak diperbolehkan.
                                                             </div>
+
                                                         </div>
 
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit" class="btn btn-primary">Lanjutkan
-                                                                Pembayaran</button>
+                                                            <button type="submit" class="btn btn-primary"
+                                                                id="submitRenew{{ $pricing->id }}">
+                                                                Lanjutkan Pembayaran
+                                                            </button>
+
                                                         </div>
                                                     </form>
-
-                                                    <script>
-                                                        document.addEventListener("DOMContentLoaded", function() {
-                                                            const formId = "{{ $pricing->id }}";
-                                                            const packageSelect = document.getElementById("packageSelect" + formId);
-                                                            const durationSelect = document.getElementById("durationSelect" + formId);
-                                                            const totalContainer = document.getElementById("totalContainer" + formId);
-                                                            const totalPriceEl = document.getElementById("totalPrice" + formId);
-
-                                                            function updateTotal() {
-                                                                const selectedPackage = packageSelect.options[packageSelect.selectedIndex];
-                                                                const price = parseFloat(selectedPackage.getAttribute("data-price")) || 0;
-                                                                const duration = parseInt(durationSelect.value) || 0;
-
-                                                                if (price > 0 && duration > 0) {
-                                                                    const total = price * duration;
-                                                                    totalPriceEl.textContent = total.toLocaleString("id-ID");
-                                                                    totalContainer.classList.remove("d-none");
-                                                                } else {
-                                                                    totalContainer.classList.add("d-none");
-                                                                }
-                                                            }
-
-                                                            // Jalankan saat ganti paket atau durasi
-                                                            packageSelect.addEventListener("change", updateTotal);
-                                                            durationSelect.addEventListener("change", updateTotal);
-
-                                                            // Jalankan sekali saat halaman terbuka (biar langsung muncul jika paket default)
-                                                            updateTotal();
-                                                        });
-                                                    </script>
-
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- 🔹 Tombol Riwayat Perpanjangan -->
-                                        <button type="button" hidden class="btn btn-info btn-sm ms-2"
+                                        <button type="button" hidden class="btn btn-info btn-sm ms-2 rounded-pill px-3"
                                             data-bs-toggle="modal" data-bs-target="#historyModal{{ $pricing->id }}">
                                             <i class="bi bi-clock-history"></i> Riwayat
                                         </button>
@@ -423,7 +400,7 @@
                                                                         <tr>
                                                                             <td>{{ $loop->iteration }}</td>
                                                                             <td>{{ $package ? $package->name : '-' }}</td>
-                                                                            <td>{{ $renewal->duration }} bulan</td>
+                                                                            <td>{{ $renewal->duration }} hari</td>
                                                                             <td>
                                                                                 {{ $renewal->new_end_date ? \Carbon\Carbon::parse($renewal->new_end_date)->format('d M Y') : '-' }}
                                                                             </td>
@@ -443,6 +420,220 @@
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
+                                <td class="text-center">
+                                    @if ($pricing->start_date && $pricing->end_date)
+                                        <!-- Tombol Add User -->
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2"
+                                            data-bs-toggle="modal" data-bs-target="#addUserModal{{ $pricing->id }}">
+                                            <i class="bi bi-person-plus"></i> Add
+                                        </button>
+
+                                        <!-- Tombol View User -->
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                                            data-bs-toggle="modal" data-bs-target="#viewUserModal{{ $pricing->id }}">
+                                            <i class="bi bi-people"></i> View
+                                        </button>
+
+                                        <!-- Modal Add User -->
+                                        <div class="modal fade" id="addUserModal{{ $pricing->id }}" tabindex="-1"
+                                            aria-labelledby="addUserModalLabel{{ $pricing->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form method="POST" action="{{ route('membership.store') }}">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="addUserModalLabel{{ $pricing->id }}">
+                                                                Tambah User Membership
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="pricing_id"
+                                                                value="{{ $pricing->id }}">
+                                                            {{-- <input type="hidden" name="db_database"
+                                                            value="{{ $pricing->user->DB_DATABASE }}">
+                                                        <input type="hidden" name="db_host"
+                                                            value="{{ $pricing->user->DB_HOST }}">
+                                                        <input type="hidden" name="db_port"
+                                                            value="{{ $pricing->user->DB_PORT }}"> --}}
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Nama Lengkap</label>
+                                                                <input type="text" name="name" class="form-control"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Email</label>
+                                                                <input type="email" name="email" class="form-control"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Password</label>
+                                                                <input type="password" name="userpassword"
+                                                                    class="form-control" required>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Level</label>
+                                                                <select name="level" class="form-select" required>
+                                                                    <option value="">-- Pilih Level --</option>
+                                                                    <option value="admin">Admin</option>
+                                                                    <option value="kasir">Kasir</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- View User Modal -->
+                                        <div class="modal fade" id="viewUserModal{{ $pricing->id }}" tabindex="-1"
+                                            aria-labelledby="viewUserModalLabel{{ $pricing->id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-primary text-white">
+                                                        <h5 class="modal-title"
+                                                            id="viewUserModalLabel{{ $pricing->id }}">
+                                                            User Membership - {{ $pricing->namapaket }}
+                                                        </h5>
+                                                        <button type="button" class="btn-close btn-close-white"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        @php
+                                                            $users = \App\Models\MembershipUser::where(
+                                                                'pricing_id',
+                                                                $pricing->id,
+                                                            )->get();
+                                                        @endphp
+
+                                                        @if ($users->isEmpty())
+                                                            <p class="text-muted text-center mb-0">Belum ada user
+                                                                membership.
+                                                            </p>
+                                                        @else
+                                                            <div class="table-responsive">
+                                                                <table
+                                                                    class="table table-striped align-middle text-center mb-0">
+                                                                    <thead class="table-light">
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Nama</th>
+                                                                            <th>Email</th>
+                                                                            <th>Level</th>
+                                                                            <th>Dibuat</th>
+                                                                            <th>Aksi</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($users as $muser)
+                                                                            <tr>
+                                                                                <td>{{ $loop->iteration }}</td>
+                                                                                <td>{{ $muser->name }}</td>
+                                                                                <td>{{ $muser->email }}</td>
+                                                                                <td>{{ ucfirst($muser->level) }}</td>
+                                                                                <td>{{ $muser->created_at->format('d M Y H:i') }}
+                                                                                </td>
+                                                                                <td>
+                                                                                    <!-- Tombol Edit -->
+                                                                                    <button type="button"
+                                                                                        class="btn btn-sm btn-outline-primary me-1"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#editMembershipModal{{ $muser->id }}">
+                                                                                        <i class="bi bi-pencil-square"></i>
+                                                                                    </button>
+
+                                                                                    <!-- Tombol Hapus -->
+                                                                                    <form
+                                                                                        action="{{ route('membership.destroy', $muser->id) }}"
+                                                                                        method="POST" class="d-inline">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-sm btn-outline-danger"
+                                                                                            onclick="return confirm('Yakin ingin menghapus user ini?')">
+                                                                                            <i class="bi bi-trash"></i>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal Edit User DITARUH DI LUAR modal view user -->
+                                        @foreach ($users as $muser)
+                                            <div class="modal fade" id="editMembershipModal{{ $muser->id }}"
+                                                tabindex="-1"
+                                                aria-labelledby="editMembershipModalLabel{{ $muser->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content border-0 shadow-lg">
+                                                        <div class="modal-header bg-primary text-white">
+                                                            <h5 class="modal-title"
+                                                                id="editMembershipModalLabel{{ $muser->id }}">
+                                                                Edit User Membership
+                                                            </h5>
+                                                            <button type="button" class="btn-close btn-close-white"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+
+                                                        <form action="{{ route('membership.update', $muser->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">Nama</label>
+                                                                    <input type="text" name="name"
+                                                                        class="form-control" value="{{ $muser->name }}"
+                                                                        required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">Level</label>
+                                                                    <select name="level" class="form-select" required>
+                                                                        <option value="admin"
+                                                                            {{ $muser->level == 'admin' ? 'selected' : '' }}>
+                                                                            Admin</option>
+                                                                        <option value="kasir"
+                                                                            {{ $muser->level == 'kasir' ? 'selected' : '' }}>
+                                                                            Kasir</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-primary">Simpan
+                                                                    Perubahan</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+
                             </tr>
                         @empty
                             <tr>
@@ -483,12 +674,13 @@
                                 <label for="durasi" class="form-label">Pilih Durasi Langganan</label>
                                 <select id="durasi" name="durasi" class="form-select" required>
                                     <option value="">-- Pilih Durasi --</option>
-                                    <option value="1">1 Bulan</option>
-                                    <option value="3">3 Bulan</option>
-                                    <option value="6">6 Bulan</option>
-                                    <option value="12">1 Tahun</option>
-                                    <option value="24">2 Tahun</option>
-                                    <option value="36">3 Tahun</option>
+                                    <option value="1">30 Hari</option>
+                                    <option value="3">90 Hari</option>
+                                    <option value="6">180 Hari</option>
+                                    <option value="12">360 Hari</option>
+                                    <option value="24">720 Hari</option>
+                                    <option value="36">1080 Hari</option>
+
                                 </select>
                             </div>
 
@@ -662,4 +854,126 @@
                 // Redirect ke halaman pembayaran sambil kirim query string
                 window.location.href = `/pricing/${pricingId}/payment?package_id=${packageId}&duration=${duration}`;
             }
+        </script>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+                document.querySelectorAll('[id^="renewModal"]').forEach(modal => {
+                    modal.addEventListener('shown.bs.modal', function() {
+
+                        const pricingId = modal.id.replace('renewModal', '');
+                        const packageSelect = modal.querySelector('[name="package_id"]');
+                        const durationInput = modal.querySelector('[name="duration"]');
+                        const previewBox = document.getElementById('pricePreview' + pricingId);
+
+                        if (!packageSelect || !durationInput || !previewBox) return;
+
+                        function preview() {
+                            if (!packageSelect.value || !durationInput.value) {
+                                previewBox.classList.add('d-none');
+                                return;
+                            }
+
+                            fetch(`/pricing/${pricingId}/preview`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        package_id: packageSelect.value,
+                                        duration: durationInput.value
+                                    })
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    previewBox.classList.remove('d-none');
+
+                                    const submitBtn = document.getElementById('submitRenew' +
+                                        pricingId);
+                                    const downgradeWarning = document.getElementById(
+                                        'downgradeWarning' + pricingId);
+
+                                    // Reset
+                                    submitBtn.disabled = false;
+                                    downgradeWarning.classList.add('d-none');
+
+                                    if (data.status === 'error') {
+                                        previewBox.className = 'alert alert-danger mt-3';
+                                        previewBox.innerHTML = data.message;
+                                        submitBtn.disabled = true;
+                                        return;
+                                    }
+
+                                    if (data.status === 'downgrade') {
+                                        previewBox.className = 'alert alert-warning mt-3';
+                                        previewBox.innerHTML = `
+                                            <strong>Downgrade Paket</strong><br>
+                                            Paket yang dipilih lebih rendah dari paket aktif.
+                                        `;
+
+                                        // 🚫 DISABLE SUBMIT
+                                        submitBtn.disabled = true;
+                                        downgradeWarning.classList.remove('d-none');
+                                        return;
+                                    }
+
+                                    // ✅ Upgrade / Renewal
+                                    const label = data.status === 'upgrade' ?
+                                        '<strong>Upgrade Paket</strong>' :
+                                        '<strong>Perpanjangan Paket</strong>';
+
+                                    previewBox.className = 'alert alert-info mt-3';
+                                    previewBox.innerHTML = `
+                                    <strong>${data.status === 'upgrade' ? 'Upgrade Paket' : 'Perpanjangan Paket'}</strong>
+                                    <hr class="my-2">
+
+                                    <div class="d-flex justify-content-between">
+                                        <span>Harga Paket Baru</span>
+                                        <span>Rp ${data.new_price.toLocaleString('id-ID')}</span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <span>Durasi</span>
+                                        <span>${data.duration_days} hari</span>
+                                    </div>
+
+                                    ${data.remaining_days > 0 ? `
+                                                                        <div class="d-flex justify-content-between text-success">
+                                                                            <span>Sisa Hari Lama</span>
+                                                                            <span>${data.remaining_days} hari</span>
+                                                                        </div>
+
+                                                                        <div class="d-flex justify-content-between text-success">
+                                                                            <span>Potongan Pro-rata</span>
+                                                                            <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
+                                                                        </div>
+                                                                    ` : ''}
+
+                                    <hr class="my-2">
+
+                                    <div class="d-flex justify-content-between fw-bold text-primary fs-5">
+                                        <span>Total Bayar</span>
+                                        <span>Rp ${data.total.toLocaleString('id-ID')}</span>
+                                    </div>
+
+                                    <div class="mt-2 text-muted small">
+                                        Masa aktif sampai <strong>${data.newEndDate}</strong>
+                                    </div>
+                                `;
+
+
+                                    submitBtn.disabled = false;
+                                });
+
+                        }
+
+                        packageSelect.addEventListener('change', preview);
+                        durationInput.addEventListener('change', preview);
+                    });
+                });
+
+            });
         </script>

@@ -12,7 +12,7 @@
                     <div class="card-body p-4">
                         <div class="mb-3">
                             <p><strong>Paket:</strong> {{ $renewal->package->name ?? 'Tidak diketahui' }}</p>
-                            <p><strong>Durasi:</strong> {{ $renewal->duration }} bulan</p>
+                            <p><strong>Durasi:</strong> {{ $renewal->duration * 30 }} hari</p>
                             <p><strong>Total Bayar:</strong>
                                 <span class="text-success fw-bold">
                                     Rp {{ number_format($renewal->total_price, 0, ',', '.') }}

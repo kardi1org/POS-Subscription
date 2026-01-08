@@ -59,4 +59,9 @@ class Renewal extends Model
             'user_id'          // foreign key di Pricing
         );
     }
+
+    public function oldPackage()
+    {
+        return $this->belongsTo(\App\Models\Package::class, 'old_package');
+    }
 }
