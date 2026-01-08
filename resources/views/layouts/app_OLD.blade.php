@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Fonts & Bootstrap -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,7 +20,7 @@
             font-family: 'Segoe UI', 'Nunito', sans-serif;
         }
 
-        /* === Navbar Modern & Responsive === */
+        /* === Navbar Modern === */
         .navbar {
             background: #ffffff;
             border-bottom: 1px solid #e5e7eb;
@@ -36,25 +37,8 @@
             color: #2563eb;
         }
 
-        /* Styling khusus untuk menu aktif */
-        .nav-link.active-link {
+        .navbar .fw-bold.text-primary {
             color: #2563eb !important;
-            font-weight: 700 !important;
-        }
-
-        /* Perbaikan Menu Mobile */
-        @media (max-width: 767.98px) {
-            .navbar-collapse {
-                padding: 1rem 0;
-            }
-
-            .nav-item {
-                border-bottom: 1px solid #f1f5f9;
-            }
-
-            .nav-item:last-child {
-                border-bottom: none;
-            }
         }
 
         /* === Container Layout === */
@@ -62,17 +46,12 @@
             padding-top: 30px;
         }
 
-        /* === Card Pricing Responsive === */
+        /* === Card Pricing Modern === */
         .pricing-container {
             display: flex;
-            /* Memastikan konten ada di tengah secara horizontal */
             justify-content: center;
-            /* Memastikan konten ada di tengah secara vertikal jika dibutuhkan */
-            align-items: center;
             gap: 24px;
             flex-wrap: wrap;
-            padding: 20px 15px;
-            width: 100%;
         }
 
         .pricing-card {
@@ -81,27 +60,8 @@
             border-radius: 14px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
             padding: 28px 20px;
-            /* Gunakan flex-basis untuk kontrol ukuran di berbagai layar */
-            flex: 0 1 320px;
-            /* Memberikan margin otomatis kiri-kanan agar tetap center di mobile */
-            margin: 0 auto;
+            width: 300px;
             transition: all 0.3s ease;
-            list-style: none;
-        }
-
-        /* Responsivitas Khusus Mobile */
-        @media (max-width: 576px) {
-            .pricing-container {
-                /* Reset gap agar margin auto bekerja maksimal */
-                gap: 20px;
-                padding: 10px;
-            }
-
-            .pricing-card {
-                /* Memastikan kartu mengambil lebar maksimal yang tersedia di HP */
-                width: 100%;
-                max-width: 340px;
-            }
         }
 
         .pricing-card:hover {
@@ -109,22 +69,89 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
         }
 
-        /* === Table Responsive === */
+        .pricing-card .header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+
+        .pricing-card.basic .header {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .pricing-card.pro .header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .pricing-card.premium .header {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            color: #4b5563;
+        }
+
+        .pricing-card li {
+            margin: 10px 0;
+            border-bottom: 1px dashed #e5e7eb;
+            padding-bottom: 6px;
+        }
+
+        .pricing-card .button {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .pricing-card .button:hover {
+            background: #1d4ed8;
+        }
+
+        /* === Table Modern === */
         .table-container {
             background: #ffffff;
             border-radius: 14px;
             padding: 24px;
             margin-top: 30px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            overflow-x: auto;
-            /* Memungkinkan scroll horizontal jika tabel terlalu lebar */
         }
 
         table {
             width: 100%;
-            min-width: 600px;
-            /* Mencegah tabel terlalu menciut */
             border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f3f4f6;
+        }
+
+        thead th {
+            color: #374151;
+            font-weight: 600;
+            padding: 12px;
+            border-bottom: 2px solid #e5e7eb;
+            text-align: center;
+        }
+
+        tbody td {
+            padding: 12px;
+            color: #4b5563;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
         }
 
         /* === Form Container === */
@@ -133,75 +160,134 @@
             border-radius: 12px;
             padding: 32px 24px;
             max-width: 640px;
-            margin: 20px auto;
+            margin: 40px auto;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         }
 
-        /* Header Card Colors */
-        .pricing-card.basic .header {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-        }
-
-        .pricing-card.pro .header {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: #fff;
-        }
-
-        .pricing-card.premium .header {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #fff;
-        }
-
-        .pricing-card .header {
-            font-size: 1.4rem;
-            font-weight: 700;
-            border-radius: 10px;
-            padding: 14px;
-            margin-bottom: 18px;
+        .form-container h2 {
             text-align: center;
+            margin-bottom: 24px;
+            color: #1e293b;
+            font-weight: 600;
         }
 
+        .form-group label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 0.95rem;
+            padding: 10px 12px;
+        }
+
+        .form-container .button {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .form-container .button:hover {
+            background: #1d4ed8;
+        }
+
+        /* === Buttons Variants === */
+        .btn-primary {
+            background-color: #2563eb !important;
+            color: #fff !important;
+            border: none;
+        }
+
+        .btn-success {
+            background-color: #22c55e !important;
+            color: #fff !important;
+            border: none;
+        }
+
+        .btn-warning {
+            background-color: #f59e0b !important;
+            color: #fff !important;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: #6b7280 !important;
+            color: #fff !important;
+            border: none;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .pagination {
+            margin-top: 10px;
+            font-size: 0.875rem;
+        }
+
+        /* === Footer Professional Gradient === */
         footer {
+            /* background: linear-gradient(135deg, #e0edff 0%, #d5e7ff 40%, #cde2ff 100%); */
+            /* background: #ffffff; */
             color: #374151;
             text-align: center;
-            padding: 20px 0;
+            padding: 5px 0;
             font-size: 0.9rem;
-            border-top: 1px solid #e5e7eb;
-            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: outset 0 1px 3px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+        }
+
+        footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
     <div id="app">
+        <!-- NAVBAR -->
         <nav class="navbar navbar-expand-md sticky-top">
-            <div class="container">
-                <a class="navbar-brand fw-bold text-primary" href="{{ url('/') }}">
-                    <i class="bi bi-rocket-takeoff-fill me-2"></i>DATAPRIMA
-                </a>
-
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+            <div class="container-fluid px-4">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->is('home') ? 'active-link' : '' }}"
+                            <a class="nav-link {{ request()->is('/') ? 'fw-bold text-primary' : '' }}"
                                 href="{{ url('/home') }}">Home</a>
                         </li>
                         @auth
                             @if (Auth::user()->role === 'admin')
                                 <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('admin/pricing*') ? 'active-link' : '' }}"
+                                    <a class="nav-link {{ request()->is('admin/pricing*') ? 'fw-bold text-primary' : '' }}"
                                         href="{{ route('admin.pricing.index') }}">Admin Dashboard</a>
                                 </li>
                             @endif
                         @endauth
                     </ul>
 
+                    <!-- Right -->
                     <ul class="navbar-nav ms-auto">
                         @guest
                             @if (Route::has('login'))
@@ -213,17 +299,16 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle fw-semibold" href="#"
-                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    role="button" data-bs-toggle="dropdown">
                                     <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->name }}
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end shadow border-0">
+                                <div class="dropdown-menu dropdown-menu-end shadow-sm">
                                     <a class="dropdown-item text-danger" href="{{ route('logout') }}"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="bi bi-box-arrow-right me-1"></i>Logout
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
+                                        @csrf</form>
                                 </div>
                             </li>
                         @endguest
@@ -232,30 +317,22 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            <div class="container">
-                @yield('content')
-            </div>
+        <!-- MAIN -->
+        <main class="py-2">
+            @yield('content')
         </main>
-
+        <!-- FOOTER -->
         <footer>
             <div class="container">
-                <p class="mb-0">&copy; {{ date('Y') }} Dataprima. All rights reserved.</p>
+                <p class="mb-1">&copy; {{ date('Y') }} Dataprima. All rights reserved.</p>
+
             </div>
         </footer>
     </div>
 
+    <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
-        // Pastikan dropdown diinisialisasi secara manual jika masih bandel
-        document.addEventListener('DOMContentLoaded', function() {
-            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
-            var dropdownList = dropdownElementList.map(function(dropdownToggleEl) {
-                return new bootstrap.Dropdown(dropdownToggleEl)
-            });
-        });
-
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
@@ -269,7 +346,8 @@
                 icon: 'error',
                 title: 'Gagal!',
                 text: '{{ session('error') }}',
-                timer: 3000
+                timer: 3000,
+                showConfirmButton: true
             });
         @endif
     </script>
