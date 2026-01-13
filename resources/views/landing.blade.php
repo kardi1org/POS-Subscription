@@ -343,72 +343,20 @@
                                 @endif
                             </p>
                             <p class="mt-4 text-sm text-text-muted">
-                                @if(strtolower($package->name) == 'starter')
-                                    Cocok untuk usaha rintisan yang baru mulai.
-                                @elseif(strtolower($package->name) == 'business')
-                                    Paling pas untuk UMKM yang sedang berkembang.
-                                @else
-                                    Solusi custom untuk jaringan ritel besar.
-                                @endif
+                                {{ $package->description ?? (strtolower($package->name) == 'starter' ? 'Cocok untuk usaha rintisan yang baru mulai.' : (strtolower($package->name) == 'business' ? 'Paling pas untuk UMKM yang sedang berkembang.' : 'Solusi custom untuk jaringan ritel besar.')) }}
                             </p>
                         </div>
 
                         <ul class="mb-8 space-y-4 flex-1">
-                            @if(strtolower($package->name) == 'starter')
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    Fitur Dasar Kasir
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    1 Outlet
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    Laporan Harian Sederhana
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    Max 100 Transaksi/bln
-                                </li>
-                            @elseif(strtolower($package->name) == 'business')
-                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
-                                    Semua Fitur Starter
-                                </li>
-                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
-                                    Multi Outlet &amp; Multi User
-                                </li>
-                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
-                                    Laporan Lengkap &amp; Analitik
-                                </li>
-                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
-                                    Manajemen Stok Real-time
-                                </li>
-                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
-                                    Integrasi QRIS &amp; E-Wallet
-                                </li>
-                            @else
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    Semua Fitur Business
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    API Access &amp; Integrasi ERP
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    Dedicated Account Manager
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                                    Custom Development
-                                </li>
+                            @if($package->features)
+                                @foreach($package->features as $feature)
+                                    <li class="flex items-center gap-3 text-sm {{ $isBusiness ? 'font-medium text-text-main dark:text-white' : 'text-text-main dark:text-gray-300' }}">
+                                        <span class="material-symbols-outlined text-primary" style="font-size: 20px;">
+                                            {{ $isBusiness ? 'check_circle' : 'check' }}
+                                        </span>
+                                        {{ $feature }}
+                                    </li>
+                                @endforeach
                             @endif
                         </ul>
 
