@@ -188,130 +188,125 @@
             </div>
         </div>
     </div>
-    <section class="py-20 sm:py-32" id="harga">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold tracking-tight text-text-main sm:text-4xl dark:text-white">Pilihan Paket
-                    Fleksibel</h2>
-                <p class="mt-4 text-lg text-text-muted dark:text-gray-400">Pilih paket yang sesuai dengan skala bisnis
-                    Anda. Upgrade kapan saja seiring pertumbuhan usaha.</p>
+   
+
+    <section class="py-20 bg-white" id="harga">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-text-main mb-4">Solusi untuk Setiap Skala Bisnis</h2>
+                <p class="text-text-secondary max-w-2xl mx-auto">Kami memahami bahwa setiap bisnis memiliki kebutuhan
+                    unik. Dataprima POS dirancang untuk tumbuh bersama Anda.</p>
             </div>
-            <div class="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-8 items-start">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div
-                    class="relative flex flex-col rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:bg-surface-dark dark:border-white/10">
-                    <div class="mb-5">
-                        <h3 class="text-lg font-bold text-text-main dark:text-white">STARTER</h3>
-                        <p class="mt-2 flex items-baseline gap-1">
-                            <span class="text-4xl font-black text-text-main dark:text-white">Rp 0</span>
-                            <span class="text-sm font-medium text-text-muted">/Bulan</span>
-                        </p>
-                        <p class="mt-4 text-sm text-text-muted">Cocok untuk usaha rintisan yang baru mulai.</p>
+                    class="card-hover bg-white border border-surface-border rounded-2xl p-8 flex flex-col transition-all duration-300 shadow-sm hover:shadow-lg"
+                    data-aos="fade-up" data-aos-delay="100">
+                    <div class="mb-4">
+                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">UMKM</span>
                     </div>
-                    <ul class="mb-8 space-y-4 flex-1">
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Fitur Dasar Kasir
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            1 Outlet
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Laporan Harian Sederhana
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Max 100 Transaksi/bln
-                        </li>
-                    </ul>
-                    <a href="{{ route('pricing.create', 1) }}"
-                        class="text-center w-full rounded-lg bg-gray-100 py-3 text-sm font-bold text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 transition-colors">
-                        Daftar Gratis
-                    </a>
+                    <h3 class="text-2xl font-bold text-text-main mb-2">Essentials</h3>
+                    <p class="text-text-secondary text-sm mb-6">Mulai langkah digital pertama bisnis Anda dengan fitur
+                        esensial yang mudah digunakan.</p>
+                    <div class="flex-1 space-y-4 mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Pencatatan Transaksi Dasar</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Manajemen Produk Simpel</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Laporan Penjualan Harian</span>
+                        </div>
+                    </div>
+                    <div class="mt-auto pt-6 border-t border-surface-border">
+                        <p class="text-text-main font-bold mb-4">Mulai dengan Penawaran Terbaik</p>
+                         <a href="{{ route('pricing.create', 1) }}" 
+                            class="inline-block w-full text-center bg-transparent border border-surface-border hover:bg-primary hover:border-primary text-text-main hover:text-white font-bold py-3 rounded-lg transition-all duration-300">
+                            Pesan Sekarang
+                        </a>
+                    </div>
                 </div>
+                
                 <div
-                    class="relative flex flex-col rounded-2xl border-2 border-primary bg-white p-8 shadow-xl scale-105 z-10 dark:bg-surface-dark dark:border-primary">
+                    class="card-hover bg-white border-2 border-primary/20 rounded-2xl p-8 flex flex-col relative overflow-hidden transition-all duration-300 transform md:-translate-y-4 shadow-xl shadow-green-900/5"
+                    data-aos="fade-up" data-aos-delay="200">
                     <div
-                        class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold uppercase tracking-wide text-text-main shadow-sm">
-                        Terpopuler
+                        class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">
+                        Populer
                     </div>
-                    <div class="mb-5">
-                        <h3 class="text-lg font-bold text-text-main dark:text-white">BUSINESS</h3>
-                        <p class="mt-2 flex items-baseline gap-1">
-                            <span class="text-4xl font-black text-text-main dark:text-white">Rp 149rb</span>
-                            <span class="text-sm font-medium text-text-muted">/Bulan</span>
-                        </p>
-                        <p class="mt-4 text-sm text-text-muted">Paling pas untuk UMKM yang sedang berkembang.</p>
+                    <div class="mb-4">
+                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Cafe / Resto
+                            / Retail</span>
                     </div>
-                    <ul class="mb-8 space-y-4 flex-1">
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Semua Fitur Starter
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Multi Outlet &amp; Multi User
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Laporan Lengkap &amp; Analitik
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Manajemen Stok Real-time
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Integrasi QRIS &amp; E-Wallet
-                        </li>
-                    </ul>
-                    <a href="{{ route('pricing.create', 2) }}"
-                        class="text-center w-full rounded-lg bg-primary py-3 text-sm font-bold text-text-main shadow-md hover:bg-primary-dark transition-all transform hover:-translate-y-0.5">
-                        Pilih Paket
-                    </a>
-                    <p class="mt-3 text-center text-xs text-primary-dark font-medium">Hemat 20% dengan bayar tahunan</p>
+                    <h3 class="text-2xl font-bold text-text-main mb-2">Integrated</h3>
+                    <p class="text-text-secondary text-sm mb-6">Optimalkan operasional harian dengan sistem manajemen
+                        stok dan dapur yang terintegrasi.</p>
+                    <div class="flex-1 space-y-4 mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Manajemen Stok Real-time</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Kitchen Display System (KDS)</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Manajemen Meja &amp; Order</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Integrasi E-Wallet &amp; QRIS</span>
+                        </div>
+                    </div>
+                    <div class="mt-auto pt-6 border-t border-surface-border">
+                        <p class="text-text-main font-bold mb-4">Konsultasikan Kebutuhan Anda</p>
+                        <a href="{{ route('pricing.create', 2) }}" 
+                        class="block w-full text-center bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-lg transition-all duration-300 shadow-lg shadow-primary/30">
+                            Pesan Sekarang
+                        </a>
+                      </div>
                 </div>
+
                 <div
-                    class="relative flex flex-col rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:bg-surface-dark dark:border-white/10">
-                    <div class="mb-5">
-                        <h3 class="text-lg font-bold text-text-main dark:text-white">ENTERPRISE</h3>
-                        <p class="mt-2 flex items-baseline gap-1">
-                            <span class="text-3xl font-black text-text-main dark:text-white">Hubungi Sales</span>
-                        </p>
-                        <p class="mt-4 text-sm text-text-muted">Solusi custom untuk jaringan ritel besar.</p>
+                    class="card-hover bg-white border border-surface-border rounded-2xl p-8 flex flex-col transition-all duration-300 shadow-sm hover:shadow-lg"
+                    data-aos="fade-up" data-aos-delay="300">
+                    <div class="mb-4">
+                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Skala
+                            Besar</span>
                     </div>
-                    <ul class="mb-8 space-y-4 flex-1">
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Semua Fitur Business
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            API Access &amp; Integrasi ERP
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Dedicated Account Manager
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Custom Development
-                        </li>
-                    </ul>
-                    <a href="https://wa.me/6281234567890"
-                        class="text-center w-full rounded-lg bg-gray-100 py-3 text-sm font-bold text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 transition-colors">
-                        Kontak Kami
-                    </a>
+                    <h3 class="text-2xl font-bold text-text-main mb-2">Enterprise</h3>
+                    <p class="text-text-secondary text-sm mb-6">Kontrol penuh untuk bisnis multi-cabang dengan analitik
+                        mendalam dan kustomisasi API.</p>
+                    <div class="flex-1 space-y-4 mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Dashboard Multi-Outlet</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">API Terbuka &amp; Integrasi ERP</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-text-main text-sm">Dedicated Account Manager</span>
+                        </div>
+                    </div>
+                    <div class="mt-auto pt-6 border-t border-surface-border">
+                        <p class="text-text-main font-bold mb-4">Dapatkan Solusi Kustom</p>
+                        <a href="{{ route('pricing.create', 3) }}" 
+                            class="inline-block w-full text-center bg-transparent border border-surface-border hover:bg-primary hover:border-primary text-text-main hover:text-white font-bold py-3 rounded-lg transition-all duration-300">
+                            Pesan Sekarang
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
     <section class="py-20 bg-white dark:bg-surface-dark" id="fitur">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="mb-16">

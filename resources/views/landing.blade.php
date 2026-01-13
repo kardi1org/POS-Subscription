@@ -10,6 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
         tailwind.config = {
@@ -37,26 +38,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const sections = document.querySelectorAll(".section-fade");
-
-            // Tambahkan state awal secara dinamis lewat JS agar jika JS mati, 
-            // konten tetap muncul (tidak kena opacity 0)
-            sections.forEach(s => s.classList.add('js-hidden'));
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.remove('js-hidden');
-                        // Opsional: berhenti mengamati jika sudah muncul sekali
-                        // observer.unobserve(entry.target); 
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-
             // Back to Top JS logic
             const backToTopBtn = document.getElementById("backToTop");
             
@@ -98,17 +79,6 @@
             scroll-behavior: smooth;
             scroll-padding-top: 80px;
             /* Jarak agar tidak tertutup navbar */
-        }
-
-        /* Efek transisi antar section saat scroll */
-        .section-fade {
-            transition: all 0.7s ease-out;
-        }
-
-        /* Pastikan section tetap muncul jika JS gagal */
-        .js-hidden {
-            opacity: 0;
-            transform: translateY(20px);
         }
 
         /* Opsional: Animasi masuk saat menu pertama kali muncul (Entrance) */
@@ -249,7 +219,7 @@
     <section class="relative overflow-hidden py-16 sm:py-24 lg:py-32" id="topsection">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
-                <div class="flex flex-col gap-6 text-center lg:text-left">
+                <div class="flex flex-col gap-6 text-center lg:text-left" data-aos="fade-right">
                     <h1
                         class="text-4xl font-black leading-tight tracking-tight text-text-main sm:text-5xl lg:text-6xl dark:text-white">
                         Tinggalkan Rekap Manual. Fokus <span class="text-primary-dark dark:text-primary">Kembangkan
@@ -281,7 +251,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="relative lg:h-auto w-full flex justify-center lg:justify-end">
+                <div class="relative lg:h-auto w-full flex justify-center lg:justify-end" data-aos="fade-left">
                     <div
                         class="absolute -right-20 -top-20 h-[300px] w-[300px] rounded-full bg-primary/20 blur-3xl dark:bg-primary/10">
                     </div>
@@ -336,122 +306,137 @@
     </section>
 
 
-
-    <section class="section-fade py-20 bg-white" id="solutions">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-text-main mb-4">Solusi untuk Setiap Skala Bisnis</h2>
-                <p class="text-text-secondary max-w-2xl mx-auto">Kami memahami bahwa setiap bisnis memiliki kebutuhan
-                    unik. Dataprima POS dirancang untuk tumbuh bersama Anda.</p>
+     <!-- Harga paket  -->      
+     <section class="py-20 sm:py-32" id="solutions">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold tracking-tight text-text-main sm:text-4xl dark:text-white">Pilihan Paket
+                    Fleksibel</h2>
+                <p class="mt-4 text-lg text-text-muted dark:text-gray-400">Pilih paket yang sesuai dengan skala bisnis
+                    Anda. Upgrade kapan saja seiring pertumbuhan usaha.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-8 items-start">
                 <div
-                    class="card-hover bg-white border border-surface-border rounded-2xl p-8 flex flex-col transition-all duration-300 shadow-sm hover:shadow-lg">
-                    <div class="mb-4">
-                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">UMKM</span>
+                    class="relative flex flex-col rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:bg-surface-dark dark:border-white/10">
+                    <div class="mb-5">
+                        <h3 class="text-lg font-bold text-text-main dark:text-white">STARTER</h3>
+                        <p class="mt-2 flex items-baseline gap-1">
+                            <span class="text-4xl font-black text-text-main dark:text-white">Rp 0</span>
+                            <span class="text-sm font-medium text-text-muted">/Bulan</span>
+                        </p>
+                        <p class="mt-4 text-sm text-text-muted">Cocok untuk usaha rintisan yang baru mulai.</p>
                     </div>
-                    <h3 class="text-2xl font-bold text-text-main mb-2">Essentials</h3>
-                    <p class="text-text-secondary text-sm mb-6">Mulai langkah digital pertama bisnis Anda dengan fitur
-                        esensial yang mudah digunakan.</p>
-                    <div class="flex-1 space-y-4 mb-8">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Pencatatan Transaksi Dasar</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Manajemen Produk Simpel</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Laporan Penjualan Harian</span>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-6 border-t border-surface-border">
-                        <p class="text-text-main font-bold mb-4">Mulai dengan Penawaran Terbaik</p>
-                         <a href="{{ route('pricing.create', 1) }}" 
-                            class="inline-block w-full text-center bg-transparent border border-surface-border hover:bg-primary hover:border-primary text-text-main hover:text-white font-bold py-3 rounded-lg transition-all duration-300">
-                            Pesan Sekarang
-                        </a>
-                    </div>
+                    <ul class="mb-8 space-y-4 flex-1">
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            Fitur Dasar Kasir
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            1 Outlet
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            Laporan Harian Sederhana
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            Max 100 Transaksi/bln
+                        </li>
+                    </ul>
+                    <a href="{{ route('pricing.create', 1) }}"
+                        class="text-center w-full rounded-lg bg-gray-100 py-3 text-sm font-bold text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 transition-colors">
+                        Daftar Gratis
+                    </a>
                 </div>
                 <div
-                    class="card-hover bg-white border-2 border-primary/20 rounded-2xl p-8 flex flex-col relative overflow-hidden transition-all duration-300 transform md:-translate-y-4 shadow-xl shadow-green-900/5">
+                    class="relative flex flex-col rounded-2xl border-2 border-primary bg-white p-8 shadow-xl scale-105 z-10 dark:bg-surface-dark dark:border-primary">
                     <div
-                        class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">
-                        Populer
+                        class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold uppercase tracking-wide text-text-main shadow-sm">
+                        Terpopuler
                     </div>
-                    <div class="mb-4">
-                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Cafe / Resto
-                            / Retail</span>
+                    <div class="mb-5">
+                        <h3 class="text-lg font-bold text-text-main dark:text-white">BUSINESS</h3>
+                        <p class="mt-2 flex items-baseline gap-1">
+                            <span class="text-4xl font-black text-text-main dark:text-white">Rp 149rb</span>
+                            <span class="text-sm font-medium text-text-muted">/Bulan</span>
+                        </p>
+                        <p class="mt-4 text-sm text-text-muted">Paling pas untuk UMKM yang sedang berkembang.</p>
                     </div>
-                    <h3 class="text-2xl font-bold text-text-main mb-2">Integrated</h3>
-                    <p class="text-text-secondary text-sm mb-6">Optimalkan operasional harian dengan sistem manajemen
-                        stok dan dapur yang terintegrasi.</p>
-                    <div class="flex-1 space-y-4 mb-8">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Manajemen Stok Real-time</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Kitchen Display System (KDS)</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Manajemen Meja &amp; Order</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Integrasi E-Wallet &amp; QRIS</span>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-6 border-t border-surface-border">
-                        <p class="text-text-main font-bold mb-4">Konsultasikan Kebutuhan Anda</p>
-                        <a href="{{ route('pricing.create', 2) }}" 
-                        class="block w-full text-center bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-lg transition-all duration-300 shadow-lg shadow-primary/30">
-                            Pesan Sekarang
-                        </a>
-                      </div>
+                    <ul class="mb-8 space-y-4 flex-1">
+                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size: 20px;">check_circle</span>
+                            Semua Fitur Starter
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size: 20px;">check_circle</span>
+                            Multi Outlet &amp; Multi User
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size: 20px;">check_circle</span>
+                            Laporan Lengkap &amp; Analitik
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size: 20px;">check_circle</span>
+                            Manajemen Stok Real-time
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size: 20px;">check_circle</span>
+                            Integrasi QRIS &amp; E-Wallet
+                        </li>
+                    </ul>
+                    <a href="{{ route('pricing.create', 2) }}"
+                        class="text-center w-full rounded-lg bg-primary py-3 text-sm font-bold text-text-main shadow-md hover:bg-primary-dark transition-all transform hover:-translate-y-0.5">
+                        Pilih Paket
+                    </a>
+                    <p class="mt-3 text-center text-xs text-primary-dark font-medium">Hemat 20% dengan bayar tahunan</p>
                 </div>
                 <div
-                    class="card-hover bg-white border border-surface-border rounded-2xl p-8 flex flex-col transition-all duration-300 shadow-sm hover:shadow-lg">
-                    <div class="mb-4">
-                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Skala
-                            Besar</span>
+                    class="relative flex flex-col rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:bg-surface-dark dark:border-white/10">
+                    <div class="mb-5">
+                        <h3 class="text-lg font-bold text-text-main dark:text-white">ENTERPRISE</h3>
+                        <p class="mt-2 flex items-baseline gap-1">
+                            <span class="text-3xl font-black text-text-main dark:text-white">Hubungi Sales</span>
+                        </p>
+                        <p class="mt-4 text-sm text-text-muted">Solusi custom untuk jaringan ritel besar.</p>
                     </div>
-                    <h3 class="text-2xl font-bold text-text-main mb-2">Enterprise</h3>
-                    <p class="text-text-secondary text-sm mb-6">Kontrol penuh untuk bisnis multi-cabang dengan analitik
-                        mendalam dan kustomisasi API.</p>
-                    <div class="flex-1 space-y-4 mb-8">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Dashboard Multi-Outlet</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">API Terbuka &amp; Integrasi ERP</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                            <span class="text-text-main text-sm">Dedicated Account Manager</span>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-6 border-t border-surface-border">
-                        <p class="text-text-main font-bold mb-4">Dapatkan Solusi Kustom</p>
-                        <a href="{{ route('pricing.create', 3) }}" 
-                            class="inline-block w-full text-center bg-transparent border border-surface-border hover:bg-primary hover:border-primary text-text-main hover:text-white font-bold py-3 rounded-lg transition-all duration-300">
-                            Pesan Sekarang
-                        </a>
-                    </div>
+                    <ul class="mb-8 space-y-4 flex-1">
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            Semua Fitur Business
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            API Access &amp; Integrasi ERP
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            Dedicated Account Manager
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                            Custom Development
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/6281234567890"
+                        class="text-center w-full rounded-lg bg-gray-100 py-3 text-sm font-bold text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 transition-colors">
+                        Kontak Kami
+                    </a>
                 </div>
             </div>
         </div>
     </section>
-    <section class="section-fade py-20 relative bg-background-off-white" id="features">
+
+
+    <section class="py-20 relative bg-background-off-white" id="features">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row gap-16 items-center">
-                <div class="lg:w-1/2">
+                <div class="lg:w-1/2" data-aos="fade-right">
                     <span class="text-primary-dark font-bold tracking-wider text-sm uppercase mb-2 block">Fitur
                         Unggulan</span>
                     <h2 class="text-3xl md:text-5xl font-black text-text-main mb-6 leading-tight">Teknologi Canggih
@@ -504,7 +489,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="lg:w-1/2 relative">
+                <div class="lg:w-1/2 relative" data-aos="fade-left">
                     <div
                         class="absolute -top-10 -right-10 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none">
                     </div>
@@ -521,8 +506,8 @@
             </div>
         </div>
     </section>
-    <section class="section-fade py-20 bg-surface-alt border-y border-surface-border" id="vision">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section class="py-20 bg-surface-alt border-y border-surface-border" id="vision">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
             <h2 class="text-3xl font-bold text-text-main mb-12">Mengapa Memilih Dataprima POS?</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
                 <div
@@ -564,8 +549,8 @@
             </div>
         </div>
     </section>
-    <section class="section-fade py-20 bg-white" id="faq">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-20 bg-white" id="faq">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up">
             <h2 class="text-3xl font-bold text-text-main text-center mb-10">Pertanyaan Umum</h2>
             <div class="space-y-4">
                 <details
@@ -623,8 +608,8 @@
             </div>
         </div>
     </section>
-    <section class="section-fade py-20 bg-background-off-white">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-20 bg-background-off-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="zoom-in">
             <div
                 class="relative bg-gradient-to-r from-green-600 to-green-800 rounded-2xl p-10 md:p-16 text-center overflow-hidden shadow-2xl">
                 <div class="absolute inset-0 opacity-10"
@@ -732,6 +717,18 @@
     <button id="backToTop" title="Kembali ke Atas">
         <span class="material-symbols-outlined">expand_less</span>
     </button>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            mirror: false,
+            disable: 'mobile' ? false : 'mobile', // Aktifkan di mobile
+            offset: 100,
+        });
+    </script>
 </body>
 
 </html>
