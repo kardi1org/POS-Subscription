@@ -29,7 +29,11 @@ Auth::routes(['verify' => true]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', function () {
     $packages = \App\Models\Package::all();
-    return view('landing', compact('packages'));
+    $existingPricing = false;
+    if (Auth::check()) {
+        $existingPricing = \App\Models\Pricing::where('email', Auth::user()->email)->exists();
+    }
+    return view('landing', compact('packages', 'existingPricing'));
 });
 
 Route::get('/pricing/create/{id}', [App\Http\Controllers\HomeController::class, 'create'])->name('pricing.create');

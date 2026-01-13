@@ -360,10 +360,12 @@
                             @endif
                         </ul>
 
-                        <a href="{{ route('pricing.create', $package->id) }}"
-                            class="text-center w-full rounded-lg {{ $isBusiness ? 'bg-primary text-text-main hover:bg-primary-dark shadow-md transform hover:-translate-y-0.5' : 'bg-gray-100 text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20' }} py-3 text-sm font-bold transition-all transition-colors">
-                            {{ strtolower($package->name) == 'starter' ? 'Daftar Gratis' : (strtolower($package->name) == 'enterprise' ? 'Kontak Kami' : 'Pilih Paket') }}
-                        </a>
+                        @if(!$existingPricing)
+                            <a href="{{ route('pricing.create', $package->id) }}"
+                                class="text-center w-full rounded-lg {{ $isBusiness ? 'bg-primary text-text-main hover:bg-primary-dark shadow-md transform hover:-translate-y-0.5' : 'bg-gray-100 text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20' }} py-3 text-sm font-bold transition-all transition-colors">
+                                {{ strtolower($package->name) == 'starter' ? 'Daftar Gratis' : (strtolower($package->name) == 'enterprise' ? 'Kontak Kami' : 'Pilih Paket') }}
+                            </a>
+                        @endif
                         
                         @if($isBusiness)
                             <p class="mt-3 text-center text-xs text-primary-dark font-medium">Hemat 20% dengan bayar tahunan</p>
