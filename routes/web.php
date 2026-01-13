@@ -28,7 +28,8 @@ Auth::routes(['verify' => true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', function () {
-    return view('landing');
+    $packages = \App\Models\Package::all();
+    return view('landing', compact('packages'));
 });
 
 Route::get('/pricing/create/{id}', [App\Http\Controllers\HomeController::class, 'create'])->name('pricing.create');

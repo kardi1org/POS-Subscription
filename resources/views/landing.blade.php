@@ -316,118 +316,112 @@
                     Anda. Upgrade kapan saja seiring pertumbuhan usaha.</p>
             </div>
             <div class="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-8 items-start">
-                <div
-                    class="relative flex flex-col rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:bg-surface-dark dark:border-white/10">
-                    <div class="mb-5">
-                        <h3 class="text-lg font-bold text-text-main dark:text-white">STARTER</h3>
-                        <p class="mt-2 flex items-baseline gap-1">
-                            <span class="text-4xl font-black text-text-main dark:text-white">Rp 0</span>
-                            <span class="text-sm font-medium text-text-muted">/Bulan</span>
-                        </p>
-                        <p class="mt-4 text-sm text-text-muted">Cocok untuk usaha rintisan yang baru mulai.</p>
-                    </div>
-                    <ul class="mb-8 space-y-4 flex-1">
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Fitur Dasar Kasir
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            1 Outlet
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Laporan Harian Sederhana
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Max 100 Transaksi/bln
-                        </li>
-                    </ul>
-                    <a href="{{ route('pricing.create', 1) }}"
-                        class="text-center w-full rounded-lg bg-gray-100 py-3 text-sm font-bold text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 transition-colors">
-                        Daftar Gratis
-                    </a>
-                </div>
-                <div
-                    class="relative flex flex-col rounded-2xl border-2 border-primary bg-white p-8 shadow-xl scale-105 z-10 dark:bg-surface-dark dark:border-primary">
+                @foreach($packages as $package)
+                    @php
+                        $isBusiness = strtolower($package->name) == 'business' || $package->id == 2;
+                        $isEnterprise = strtolower($package->name) == 'enterprise' || $package->id == 3;
+                    @endphp
+                    
                     <div
-                        class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold uppercase tracking-wide text-text-main shadow-sm">
-                        Terpopuler
+                        class="relative flex flex-col rounded-2xl border {{ $isBusiness ? 'border-2 border-primary scale-105 z-10 shadow-xl' : 'border-gray-200 shadow-sm transition-shadow hover:shadow-lg' }} bg-white p-8 dark:bg-surface-dark {{ $isBusiness ? 'dark:border-primary' : 'dark:border-white/10' }}"
+                        data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
+                        
+                        @if($isBusiness)
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold uppercase tracking-wide text-text-main shadow-sm">
+                                Terpopuler
+                            </div>
+                        @endif
+
+                        <div class="mb-5">
+                            <h3 class="text-lg font-bold text-text-main dark:text-white uppercase">{{ $package->name }}</h3>
+                            <p class="mt-2 flex items-baseline gap-1">
+                                @if($isEnterprise && $package->price == 0)
+                                    <span class="text-3xl font-black text-text-main dark:text-white">Hubungi Sales</span>
+                                @else
+                                    <span class="text-4xl font-black text-text-main dark:text-white">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
+                                    <span class="text-sm font-medium text-text-muted">/Bulan</span>
+                                @endif
+                            </p>
+                            <p class="mt-4 text-sm text-text-muted">
+                                @if(strtolower($package->name) == 'starter')
+                                    Cocok untuk usaha rintisan yang baru mulai.
+                                @elseif(strtolower($package->name) == 'business')
+                                    Paling pas untuk UMKM yang sedang berkembang.
+                                @else
+                                    Solusi custom untuk jaringan ritel besar.
+                                @endif
+                            </p>
+                        </div>
+
+                        <ul class="mb-8 space-y-4 flex-1">
+                            @if(strtolower($package->name) == 'starter')
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    Fitur Dasar Kasir
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    1 Outlet
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    Laporan Harian Sederhana
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    Max 100 Transaksi/bln
+                                </li>
+                            @elseif(strtolower($package->name) == 'business')
+                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+                                    Semua Fitur Starter
+                                </li>
+                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+                                    Multi Outlet &amp; Multi User
+                                </li>
+                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+                                    Laporan Lengkap &amp; Analitik
+                                </li>
+                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+                                    Manajemen Stok Real-time
+                                </li>
+                                <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+                                    Integrasi QRIS &amp; E-Wallet
+                                </li>
+                            @else
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    Semua Fitur Business
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    API Access &amp; Integrasi ERP
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    Dedicated Account Manager
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
+                                    <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
+                                    Custom Development
+                                </li>
+                            @endif
+                        </ul>
+
+                        <a href="{{ route('pricing.create', $package->id) }}"
+                            class="text-center w-full rounded-lg {{ $isBusiness ? 'bg-primary text-text-main hover:bg-primary-dark shadow-md transform hover:-translate-y-0.5' : 'bg-gray-100 text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20' }} py-3 text-sm font-bold transition-all transition-colors">
+                            {{ strtolower($package->name) == 'starter' ? 'Daftar Gratis' : (strtolower($package->name) == 'enterprise' ? 'Kontak Kami' : 'Pilih Paket') }}
+                        </a>
+                        
+                        @if($isBusiness)
+                            <p class="mt-3 text-center text-xs text-primary-dark font-medium">Hemat 20% dengan bayar tahunan</p>
+                        @endif
                     </div>
-                    <div class="mb-5">
-                        <h3 class="text-lg font-bold text-text-main dark:text-white">BUSINESS</h3>
-                        <p class="mt-2 flex items-baseline gap-1">
-                            <span class="text-4xl font-black text-text-main dark:text-white">Rp 149rb</span>
-                            <span class="text-sm font-medium text-text-muted">/Bulan</span>
-                        </p>
-                        <p class="mt-4 text-sm text-text-muted">Paling pas untuk UMKM yang sedang berkembang.</p>
-                    </div>
-                    <ul class="mb-8 space-y-4 flex-1">
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Semua Fitur Starter
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Multi Outlet &amp; Multi User
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Laporan Lengkap &amp; Analitik
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Manajemen Stok Real-time
-                        </li>
-                        <li class="flex items-center gap-3 text-sm font-medium text-text-main dark:text-white">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 20px;">check_circle</span>
-                            Integrasi QRIS &amp; E-Wallet
-                        </li>
-                    </ul>
-                    <a href="{{ route('pricing.create', 2) }}"
-                        class="text-center w-full rounded-lg bg-primary py-3 text-sm font-bold text-text-main shadow-md hover:bg-primary-dark transition-all transform hover:-translate-y-0.5">
-                        Pilih Paket
-                    </a>
-                    <p class="mt-3 text-center text-xs text-primary-dark font-medium">Hemat 20% dengan bayar tahunan</p>
-                </div>
-                <div
-                    class="relative flex flex-col rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:bg-surface-dark dark:border-white/10">
-                    <div class="mb-5">
-                        <h3 class="text-lg font-bold text-text-main dark:text-white">ENTERPRISE</h3>
-                        <p class="mt-2 flex items-baseline gap-1">
-                            <span class="text-3xl font-black text-text-main dark:text-white">Hubungi Sales</span>
-                        </p>
-                        <p class="mt-4 text-sm text-text-muted">Solusi custom untuk jaringan ritel besar.</p>
-                    </div>
-                    <ul class="mb-8 space-y-4 flex-1">
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Semua Fitur Business
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            API Access &amp; Integrasi ERP
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Dedicated Account Manager
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-text-main dark:text-gray-300">
-                            <span class="material-symbols-outlined text-primary" style="font-size: 20px;">check</span>
-                            Custom Development
-                        </li>
-                    </ul>
-                    <a href="https://wa.me/6281234567890"
-                        class="text-center w-full rounded-lg bg-gray-100 py-3 text-sm font-bold text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 transition-colors">
-                        Kontak Kami
-                    </a>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
