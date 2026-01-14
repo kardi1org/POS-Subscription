@@ -17,7 +17,7 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#10b981", "primary-dark": "#059669", "primary-light": "#d1fae5", "background-light": "#ffffff",
+                        "primary": "#2563eb", "primary-dark": "#1d4ed8", "primary-light": "#dbeafe", "background-light": "#ffffff",
                         "background-off-white": "#f8fafc", "surface": "#ffffff",
                         "surface-alt": "#f1f5f9", "surface-border": "#e2e8f0", "text-main": "#373737ff", "text-secondary": "#64748b", "text-inverted": "#ffffff",
                     },
@@ -63,13 +63,13 @@
         }
 
         .hero-glow {
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
         }
 
         .card-hover:hover {
             transform: translateY(-4px);
-            border-color: #10b981;
-            box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.15);
+            border-color: #2563eb;
+            box-shadow: 0 10px 40px -10px rgba(37, 99, 235, 0.15);
         }
     </style>
 
@@ -123,7 +123,7 @@
             right: 30px;
             width: 50px;
             height: 50px;
-            background-color: #10b981;
+            background-color: #2563eb;
             color: white;
             border-radius: 50%;
             display: flex;
@@ -135,7 +135,7 @@
             visibility: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateY(20px);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
             border: none;
             outline: none;
         }
@@ -147,9 +147,9 @@
         }
 
         #backToTop:hover {
-            background-color: #059669;
+            background-color: #1d4ed8;
             transform: translateY(-5px);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.4);
         }
 
         #backToTop span {
@@ -207,7 +207,7 @@
                         </a>
                     @else
                         <a href="{{ route('home') }}"
-                            class="h-9 flex items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-text-main shadow-sm transition-all hover:bg-primary-dark focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                            class="h-9 flex items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-white shadow-sm transition-all hover:bg-primary-dark focus:ring-2 focus:ring-primary focus:ring-offset-2">
                             Dashboard
                         </a>
                     @endguest
@@ -231,7 +231,7 @@
                     </p>
                     <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                         <a href="{{ route('register') }}"
-                            class="flex h-12 items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-text-main shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark hover:-translate-y-0.5">
+                            class="flex h-12 items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark hover:-translate-y-0.5">
                             Mulai Langganan
                         </a>
                         <a href="#solutions"
@@ -265,7 +265,7 @@
                         <div class="absolute -left-4 bottom-12 z-20 hidden sm:flex items-center gap-3 rounded-xl bg-white p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 dark:bg-surface-dark dark:border-white/5 animate-bounce"
                             style="animation-duration: 5s;">
                             <div
-                                class="flex size-10 items-center justify-center rounded-full bg-green-100 text-green-600">
+                                class="flex size-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
                                 <span class="material-symbols-outlined">payments</span>
                             </div>
                             <div>
@@ -327,7 +327,7 @@
                         data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
                         
                         @if($isBusiness)
-                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold uppercase tracking-wide text-text-main shadow-sm">
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-sm">
                                 Terpopuler
                             </div>
                         @endif
@@ -362,7 +362,7 @@
 
                         @if(!$existingPricing)
                             <a href="{{ route('pricing.create', $package->id) }}"
-                                class="text-center w-full rounded-lg {{ $isBusiness ? 'bg-primary text-text-main hover:bg-primary-dark shadow-md transform hover:-translate-y-0.5' : 'bg-gray-100 text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20' }} py-3 text-sm font-bold transition-all transition-colors">
+                                class="text-center w-full rounded-lg {{ $isBusiness ? 'bg-primary text-white hover:bg-primary-dark shadow-md transform hover:-translate-y-0.5' : 'bg-gray-100 text-text-main hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20' }} py-3 text-sm font-bold transition-all transition-colors">
                                 {{ strtolower($package->name) == 'starter' ? 'Daftar Gratis' : (strtolower($package->name) == 'enterprise' ? 'Kontak Kami' : 'Pilih Paket') }}
                             </a>
                         @endif
@@ -394,7 +394,7 @@
                         <div
                             class="flex flex-col gap-2 p-6 rounded-xl border border-surface-border bg-white shadow-sm hover:border-primary/50 transition-all hover:shadow-md">
                             <div
-                                class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center mb-2 text-primary">
+                                class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-2 text-primary">
                                 <span class="material-symbols-outlined text-3xl">bolt</span>
                             </div>
                             <h4 class="text-text-main font-bold text-lg">Transaksi Cepat &amp; Akurat</h4>
@@ -404,7 +404,7 @@
                         <div
                             class="flex flex-col gap-2 p-6 rounded-xl border border-surface-border bg-white shadow-sm hover:border-primary/50 transition-all hover:shadow-md">
                             <div
-                                class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center mb-2 text-primary">
+                                class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-2 text-primary">
                                 <span class="material-symbols-outlined text-3xl">inventory_2</span>
                             </div>
                             <h4 class="text-text-main font-bold text-lg">Manajemen Stok</h4>
@@ -414,7 +414,7 @@
                         <div
                             class="flex flex-col gap-2 p-6 rounded-xl border border-surface-border bg-white shadow-sm hover:border-primary/50 transition-all hover:shadow-md">
                             <div
-                                class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center mb-2 text-primary">
+                                class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-2 text-primary">
                                 <span class="material-symbols-outlined text-3xl">analytics</span>
                             </div>
                             <h4 class="text-text-main font-bold text-lg">Laporan Real-time</h4>
@@ -424,7 +424,7 @@
                         <div
                             class="flex flex-col gap-2 p-6 rounded-xl border border-surface-border bg-white shadow-sm hover:border-primary/50 transition-all hover:shadow-md">
                             <div
-                                class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center mb-2 text-primary">
+                                class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-2 text-primary">
                                 <span class="material-symbols-outlined text-3xl">credit_card</span>
                             </div>
                             <h4 class="text-text-main font-bold text-lg">Pembayaran Fleksibel</h4>
@@ -438,7 +438,7 @@
                         class="absolute -top-10 -right-10 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none">
                     </div>
                     <div
-                        class="absolute -bottom-10 -left-10 w-64 h-64 bg-green-300/20 rounded-full blur-[80px] pointer-events-none">
+                        class="absolute -bottom-10 -left-10 w-64 h-64 bg-blue-300/20 rounded-full blur-[80px] pointer-events-none">
                     </div>
                     <div class="relative rounded-2xl overflow-hidden border border-surface-border shadow-2xl">
                         <div class="bg-gray-100 p-6 min-h-[400px] flex items-center justify-center bg-cover bg-center"
@@ -555,20 +555,20 @@
     <section class="py-20 bg-background-off-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="zoom-in">
             <div
-                class="relative bg-gradient-to-r from-green-600 to-green-800 rounded-2xl p-10 md:p-16 text-center overflow-hidden shadow-2xl">
+                class="relative bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-10 md:p-16 text-center overflow-hidden shadow-2xl">
                 <div class="absolute inset-0 opacity-10"
                     style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;">
                 </div>
                 <div class="relative z-10">
                     <h2 class="text-3xl md:text-5xl font-black text-white mb-6">Siap Tingkatkan Efisiensi Bisnis Anda?
                     </h2>
-                    <p class="text-green-50 text-lg mb-10 max-w-2xl mx-auto">
+                    <p class="text-blue-50 text-lg mb-10 max-w-2xl mx-auto">
                         Bergabunglah dengan bisnis modern yang telah beralih ke solusi cerdas. Jadwalkan demo gratis
                         sekarang untuk melihat bagaimana Dataprima POS bekerja.
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
                         <button
-                            class="bg-white text-green-700 hover:bg-gray-50 font-bold py-3.5 px-8 rounded-lg shadow-lg transition-colors">
+                            class="bg-white text-blue-700 hover:bg-gray-50 font-bold py-3.5 px-8 rounded-lg shadow-lg transition-colors">
                             Minta Demo Gratis
                         </button>
                         <button
