@@ -10,9 +10,9 @@ class PackageSeeder extends Seeder
     public function run(): void
     {
         Package::insert([
-            ['name' => 'Basic', 'price' => 10.00],
-            ['name' => 'Pro', 'price' => 25.00],
-            ['name' => 'Premium', 'price' => 50.00],
+            ['name' => 'Basic', 'price' => 300000.00],
+            ['name' => 'Pro', 'price' => 600000.00],
+            ['name' => 'Premium', 'price' => 900000.00],
         ]);
     }
 }
