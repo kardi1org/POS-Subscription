@@ -27,7 +27,9 @@ Auth::routes();
 Auth::routes(['verify' => true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Halaman Landing (Halaman Utama)
+Route::get('/', [App\Http\Controllers\LandingController::class, 'index'])->name('index');
 Route::get('/pricing/create/{id}', [App\Http\Controllers\HomeController::class, 'create'])->name('pricing.create');
 
 Route::post('/pricing/store', [App\Http\Controllers\HomeController::class, 'store'])->name('pricing.store');
