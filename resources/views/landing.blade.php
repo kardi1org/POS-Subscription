@@ -354,6 +354,98 @@
                 transform: translateY(-12px);
             }
         }
+
+        /* Container untuk tumpukan device di kanan */
+        .device-stack-right {
+            position: absolute;
+            bottom: -15px;
+            right: -70px;
+            /* Posisi di depan kanan monitor */
+            display: flex;
+            align-items: flex-end;
+            z-index: 25;
+        }
+
+        /* Tablet Statis */
+        .tablet-real {
+            width: 260px;
+            background: #1a1a1a;
+            padding: 7px;
+            border-radius: 12px;
+            box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Handphone Lebih Besar di depan Tablet */
+        .phone-real {
+            width: 105px;
+            /* Ukuran HP dibuat lebih besar */
+            background: #000;
+            padding: 5px;
+            border-radius: 15px;
+            box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.4);
+            position: relative;
+            margin-left: -50px;
+            /* Menumpuk di depan tablet */
+            margin-bottom: -10px;
+            z-index: 2;
+            border: 1px solid #333;
+        }
+
+        /* Penyesuaian Responsif */
+        @media (max-width: 992px) {
+            .device-stack-right {
+                right: 0;
+                scale: 0.8;
+            }
+        }
+
+        /* --- Efek Hover Gambar di Dalam Layar (Sama seperti Monitor) --- */
+
+        /* Pastikan container layar mengunci gambar (overflow hidden) */
+        .device-screen-inner {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            /* Penting: agar gambar tidak keluar bingkai saat membesar */
+            height: 100%;
+            position: relative;
+        }
+
+        /* Transisi untuk gambar di dalam tablet dan HP */
+        .device-img-real {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            /* Durasi sama dengan monitor */
+        }
+
+        /* Efek Zoom saat Tablet di-hover */
+        .tablet-real:hover .device-img-real {
+            transform: scale(1.1);
+            /* Efek membesar di dalam layar */
+        }
+
+        /* Efek Zoom saat Handphone di-hover */
+        .phone-real:hover .device-img-real {
+            transform: scale(1.1);
+            /* Efek membesar di dalam layar */
+        }
+
+        /* (Opsional) Tambahkan sedikit interaksi pada bingkai agar terasa hidup */
+        .tablet-real,
+        .phone-real {
+            transition: transform 0.3s ease;
+        }
+
+        .tablet-real:hover,
+        .phone-real:hover {
+            transform: translateY(-5px);
+            /* Bingkai sedikit naik saat di-hover */
+        }
     </style>
 </head>
 
@@ -438,12 +530,12 @@
                     <div class="text-center">
                         <div class="monitor-scene">
 
-                            <div class="floating-card card-sales">
+                            <div class="floating-card card-sales" style="top: -20px; right: 20px;">
                                 <h6 class="small text-muted fw-bold mb-1">Total Penjualan</h6>
                                 <p class="h6 fw-extrabold text-primary mb-0">Rp 12.450.000</p>
                             </div>
 
-                            <div class="floating-card card-order">
+                            <div class="floating-card card-order" style="bottom: 80px; left: -50px;">
                                 <h6 class="small text-muted fw-bold mb-1">Order Terbaru</h6>
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-check-circle-fill text-success me-2"></i>
@@ -453,8 +545,23 @@
 
                             <div class="monitor-wrapper">
                                 <div class="screen-content">
-                                    <img src="{{ asset('assets/img/POS.jpg') }}" alt="Dashboard DataPrima POS"
+                                    <img src="{{ asset('assets/img/POS_Monitor.jpg') }}" alt="Dashboard DataPrima POS"
                                         class="hero-img-pos">
+                                </div>
+                            </div>
+
+                            <div class="device-stack-right">
+                                <div class="tablet-real">
+                                    <div class="device-screen-inner">
+                                        <img src="{{ asset('assets/img/POS_Tablet.jpg') }}" class="device-img-real"
+                                            alt="Tablet POS">
+                                    </div>
+                                </div>
+                                <div class="phone-real">
+                                    <div class="device-screen-inner" style="aspect-ratio: 9/19.5;">
+                                        <img src="{{ asset('assets/img/POS_Hp.jpeg') }}" class="device-img-real"
+                                            alt="Phone POS">
+                                    </div>
                                 </div>
                             </div>
 
@@ -538,8 +645,9 @@
                     </ul>
                     <div class="mt-auto">
                         <button class="btn btn-primary w-100 rounded-pill btn-pricing shadow-sm"
-                            data-bs-toggle="modal" data-bs-target="#signupModal" data-codepaket="{{ $package->id }}"
-                            data-namapaket="{{ $package->name }} POS" data-harga="{{ $package->price }}">
+                            data-bs-toggle="modal" data-bs-target="#signupModal"
+                            data-codepaket="{{ $package->id }}" data-namapaket="{{ $package->name }} POS"
+                            data-harga="{{ $package->price }}">
                             Pilih Paket
                         </button>
                     </div>

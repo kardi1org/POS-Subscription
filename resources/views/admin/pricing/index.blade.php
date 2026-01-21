@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container py-2">
-        <div class="card shadow-sm border-0 mb-4">
+    <div class="container">
+        <div class="card shadow-sm border-0 mb-2">
             <div class="card-body d-flex justify-content-end">
                 <form method="GET" action="{{ route('admin.pricing.index') }}" class="d-flex align-items-center"
                     style="gap: 6px;">

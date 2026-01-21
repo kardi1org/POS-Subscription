@@ -24,6 +24,7 @@
             background: #ffffff;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            /* height: 70; */
         }
 
         .navbar .nav-link {
@@ -169,6 +170,124 @@
             font-size: 0.9rem;
             border-top: 1px solid #e5e7eb;
             margin-top: 50px;
+        }
+    </style>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            /* Warna background yang sama dengan landing page */
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-card {
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: #fff;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 30px 30px 10px;
+            text-align: center;
+        }
+
+        .login-header h3 {
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+
+        .form-control {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-login {
+            background-color: #2563eb;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .brand-text {
+            color: #2563eb;
+            font-weight: 800;
+        }
+    </style>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .auth-card {
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            background: #fff;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 30px 30px 10px;
+            text-align: center;
+        }
+
+        .auth-header h3 {
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+
+        .form-control {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-auth {
+            background-color: #2563eb;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-auth:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .brand-text {
+            color: #2563eb;
+            font-weight: 800;
         }
     </style>
 </head>
