@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html>
 
 <head>
@@ -45,4 +45,29 @@
 
 </body>
 
-</html>
+</html> --}}
+
+<p>Halo <strong>{{ $user->name }}</strong>,</p>
+
+<p>
+    Terima kasih telah mendaftar paket <strong>{{ $package->name }}</strong>.
+    Kami sangat menghargai kepercayaan Anda menggunakan layanan kami.
+</p>
+
+<p>
+    Bersama email ini, kami lampirkan <strong>invoice pembayaran</strong> dalam bentuk PDF
+    sebagai rincian biaya pendaftaran paket yang Anda pilih.
+</p>
+
+<p>
+    Silakan melakukan pembayaran sesuai informasi yang tertera pada invoice,
+    kemudian unggah bukti transfer melalui sistem untuk proses verifikasi.
+</p>
+
+<p>
+    Jika Anda membutuhkan bantuan lebih lanjut, hubungi kami.
+</p>
+
+<p>Terima kasih<br>
+    <strong>Tim Support</strong>
+</p>

@@ -6,6 +6,7 @@ use App\Models\Renewal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use PDF; // ⬅️ dompdf facade
 
 class InvoicePaymentMail extends Mailable
 {
@@ -26,7 +27,24 @@ class InvoicePaymentMail extends Mailable
 
     public function build()
     {
+        // ============================
+        // GENERATE PDF
+        // ============================
+        $pdf = PDF::loadView('invoices.invoice_renewal', [
+            'renewal' => $this->renewal,
+            'pricing' => $this->pricing,
+            'package' => $this->package,
+            'user'    => $this->user,
+        ])->setPaper('A4');
+
+        $invoiceNumber = 'INV-RNW-' . $this->renewal->id;
+
         return $this->subject('Invoice Pembayaran Paket')
-            ->view('emails.invoice_payment');
+            ->view('emails.invoice_payment')
+            ->attachData(
+                $pdf->output(),
+                $invoiceNumber . '.pdf',
+                ['mime' => 'application/pdf']
+            );
     }
 }

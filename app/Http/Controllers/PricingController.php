@@ -12,11 +12,12 @@ use App\Mail\StatusAktifMail;
 use App\Mail\InvoicePaymentMail;
 use App\Mail\RenewalNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 use App\Mail\BuktiTransferUploadedMail;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Crypt;
 
 class PricingController extends Controller
 {
@@ -456,7 +457,7 @@ class PricingController extends Controller
         $pricing = \App\Models\Pricing::findOrFail($renewal->pricing_id);
         $package = Package::find($renewal->new_package);
 
-        // Update data pricing sesuai renewal
+        // 1. Update data pricing lokal
         $pricing->end_date = $renewal->new_end_date;
         $pricing->codepaket = $renewal->new_package ?? $pricing->codepaket;
         $pricing->namapaket = $package->name;
@@ -465,19 +466,54 @@ class PricingController extends Controller
         $pricing->status = 'Aktif';
         $pricing->save();
 
-        // Update renewal status jadi aktif
+        // 2. Update status renewal
         $renewal->status = 'Aktif';
         $renewal->approved_by = auth()->user()->email ?? 'Admin';
         $renewal->save();
 
-        // Tambah masa aktif sesuai pilihan
+        // ========================================================
+        // UPDATE DATABASE PUSAT (db_pos)
+        // ========================================================
+        try {
+            $dbCentral = DB::connection('db_pos');
+
+            // 1. Siapkan daftar email unik yang akan diupdate
+            $emailsToUpdate = collect();
+
+            // Tambahkan email dari tabel pricing utama
+            if ($pricing->email) {
+                $emailsToUpdate->push($pricing->email);
+            }
+
+            // 2. Ambil SEMUA email dari tabel membership_users (Lokal) dengan pricing_id yang sama
+            $membershipEmails = DB::table('membership_users')
+                ->where('pricing_id', $pricing->id)
+                ->whereNotNull('email')
+                ->pluck('email'); // Mengambil semua email dalam bentuk array/collection
+
+            $emailsToUpdate = $emailsToUpdate->merge($membershipEmails)->unique();
+
+            // 3. Update semua user di DB Pusat yang emailnya ada dalam daftar
+            if ($emailsToUpdate->isNotEmpty()) {
+                $dbCentral->table('users')
+                    ->whereIn('email', $emailsToUpdate->all())
+                    ->update([
+                        'valid_date' => $pricing->end_date,
+                        'updated_at' => now()
+                    ]);
+            }
+        } catch (\Exception $e) {
+            Log::error("Gagal sinkronisasi valid_date ke DB Pusat: " . $e->getMessage());
+        }
+        // ========================================================
+
+        // 3. Kirim Email Notifikasi
         $days = (int) $renewal->duration;
-        // === Kirim email ke user ===
         if ($pricing->email) {
             Mail::to($pricing->email)->send(new \App\Mail\RenewalNotification($renewal, $days));
         }
 
-        return back()->with('success', 'Perpanjangan berhasil diaktifkan.');
+        return back()->with('success', 'Renewal activated. Central users updated based on pricing and membership emails.');
     }
 
     private function monthToDays(int $month): int

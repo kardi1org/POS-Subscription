@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceSignupMail extends Mailable
 {
@@ -26,7 +27,25 @@ class InvoiceSignupMail extends Mailable
 
     public function build()
     {
+        // ============================
+        // GENERATE PDF INVOICE
+        // ============================
+        $pdf = Pdf::loadView('invoices.invoice_signup_pdf', [
+            'pricing' => $this->pricing,
+            'package' => $this->package,
+            'total'   => $this->total,
+            'days'    => $this->days,
+            'user'    => $this->user,
+        ]);
+
         return $this->subject('Invoice Pendaftaran Paket')
-            ->view('emails.invoice_signup');
+            ->view('emails.invoice_signup')
+            ->attachData(
+                $pdf->output(),
+                'invoice-signup-' . $this->pricing->id . '.pdf',
+                [
+                    'mime' => 'application/pdf',
+                ]
+            );
     }
 }
