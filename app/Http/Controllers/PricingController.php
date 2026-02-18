@@ -199,6 +199,7 @@ class PricingController extends Controller
                 'tenant_username' => $request->db_username,
                 'tenant_password' => $encryptedPassword, // ✅ MENGGUNAKAN CRYPT
                 'valid_date'      => $request->end_date,
+                'codepaket'       => $pricing->codepaket,
                 'updated_at'      => now(),
             ];
 
@@ -499,6 +500,7 @@ class PricingController extends Controller
                     ->whereIn('email', $emailsToUpdate->all())
                     ->update([
                         'valid_date' => $pricing->end_date,
+                        'codepaket'        => $pricing->codepaket,
                         'updated_at' => now()
                     ]);
             }

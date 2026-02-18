@@ -73,6 +73,7 @@ class MembershipController extends Controller
                     'valid_date'       => optional($pricing->end_date)?->format('Y-m-d'),
                     'created_at'       => now(),
                     'updated_at'       => now(),
+                    'codepaket'        => $pricing->codepaket
                 ]);
 
             // =========================
