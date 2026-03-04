@@ -422,79 +422,116 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($pricing->start_date && $pricing->end_date)
-                                        <!-- Tombol Add User -->
-                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2"
-                                            data-bs-toggle="modal" data-bs-target="#addUserModal{{ $pricing->id }}">
-                                            <i class="bi bi-person-plus"></i> Add
-                                        </button>
+                                        @php
+                                            // Hitung jumlah user yang sudah terdaftar untuk pricing ini
+                                            $userCount = \App\Models\MembershipUser::where(
+                                                'pricing_id',
+                                                $pricing->id,
+                                            )->count();
+                                            $namaPaket = strtolower($pricing->namapaket);
 
-                                        <!-- Tombol View User -->
-                                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
-                                            data-bs-toggle="modal" data-bs-target="#viewUserModal{{ $pricing->id }}">
-                                            <i class="bi bi-people"></i> View
-                                        </button>
+                                            // Tentukan apakah user boleh menambah lagi
+                                            $canAdd = true;
+                                            $errorMsg = '';
 
-                                        <!-- Modal Add User -->
-                                        <div class="modal fade" id="addUserModal{{ $pricing->id }}" tabindex="-1"
-                                            aria-labelledby="addUserModalLabel{{ $pricing->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form method="POST" action="{{ route('membership.store') }}">
-                                                        @csrf
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="addUserModalLabel{{ $pricing->id }}">
-                                                                Tambah User Membership
-                                                            </h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="hidden" name="pricing_id"
-                                                                value="{{ $pricing->id }}">
-                                                            {{-- <input type="hidden" name="db_database"
-                                                            value="{{ $pricing->user->DB_DATABASE }}">
-                                                        <input type="hidden" name="db_host"
-                                                            value="{{ $pricing->user->DB_HOST }}">
-                                                        <input type="hidden" name="db_port"
-                                                            value="{{ $pricing->user->DB_PORT }}"> --}}
+                                            if ($namaPaket == 'basic') {
+                                                $canAdd = false;
+                                                $errorMsg = 'Paket Basic tidak mendukung penambahan user membership.';
+                                            } elseif ($namaPaket == 'pro' && $userCount >= 3) {
+                                                $canAdd = false;
+                                                $errorMsg = 'Batas maksimal Paket Pro (3 user) telah tercapai.';
+                                            }
+                                        @endphp
 
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Nama Lengkap</label>
-                                                                <input type="text" name="name" class="form-control"
-                                                                    required>
+                                        @if ($canAdd)
+                                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2"
+                                                data-bs-toggle="modal" data-bs-target="#addUserModal{{ $pricing->id }}">
+                                                <i class="bi bi-person-plus"></i> Add
+                                            </button>
+                                        @else
+                                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3 me-2"
+                                                onclick="alert('{{ $errorMsg }}')">
+                                                <i class="bi bi-lock-fill"></i> Add
+                                            </button>
+                                        @endif
+
+                                        @if ($userCount > 0)
+                                            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#viewUserModal{{ $pricing->id }}">
+                                                <i class="bi bi-people"></i> View
+                                                <span class="badge rounded-pill bg-secondary">{{ $userCount }}</span>
+                                            </button>
+                                        @endif
+
+                                        @if ($canAdd)
+                                            <div class="modal fade" id="addUserModal{{ $pricing->id }}" tabindex="-1"
+                                                aria-labelledby="addUserModalLabel{{ $pricing->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content border-0 shadow-lg">
+                                                        <form method="POST" action="{{ route('membership.store') }}">
+                                                            @csrf
+                                                            <div class="modal-header bg-primary text-white">
+                                                                <h5 class="modal-title"
+                                                                    id="addUserModalLabel{{ $pricing->id }}">
+                                                                    <i class="bi bi-person-plus-fill me-2"></i>Tambah User
+                                                                    Membership
+                                                                </h5>
+                                                                <button type="button" class="btn-close btn-close-white"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
+                                                            <div class="modal-body p-4">
+                                                                <div class="alert alert-info py-2 small mb-3">
+                                                                    <i class="bi bi-info-circle me-1"></i>
+                                                                    Kuota saat ini: <strong>{{ $userCount }}</strong> /
+                                                                    {{ $namaPaket == 'pro' ? '3' : 'Unlimited' }} user.
+                                                                </div>
 
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Email</label>
-                                                                <input type="email" name="email" class="form-control"
-                                                                    required>
-                                                            </div>
+                                                                <input type="hidden" name="pricing_id"
+                                                                    value="{{ $pricing->id }}">
 
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Password</label>
-                                                                <input type="password" name="userpassword"
-                                                                    class="form-control" required>
-                                                            </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Nama Lengkap</label>
+                                                                    <input type="text" name="name"
+                                                                        class="form-control" placeholder="Masukkan nama"
+                                                                        required>
+                                                                </div>
 
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Level</label>
-                                                                <select name="level" class="form-select" required>
-                                                                    <option value="">-- Pilih Level --</option>
-                                                                    <option value="admin">Admin</option>
-                                                                    <option value="kasir">Kasir</option>
-                                                                </select>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Email</label>
+                                                                    <input type="email" name="email"
+                                                                        class="form-control" placeholder="nama@email.com"
+                                                                        required>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Password</label>
+                                                                    <input type="password" name="userpassword"
+                                                                        class="form-control" placeholder="Min. 8 karakter"
+                                                                        required>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Level</label>
+                                                                    <select name="level" class="form-select" required>
+                                                                        <option value="">-- Pilih Level --</option>
+                                                                        <option value="admin">Admin</option>
+                                                                        <option value="kasir">Kasir</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit" class="btn btn-primary">Simpan</button>
-                                                        </div>
-                                                    </form>
+                                                            <div class="modal-footer bg-light">
+                                                                <button type="button" class="btn btn-secondary px-4"
+                                                                    data-bs-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-primary px-4">Simpan
+                                                                    User</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
 
                                         <!-- View User Modal -->
                                         <div class="modal fade" id="viewUserModal{{ $pricing->id }}" tabindex="-1"
@@ -941,16 +978,16 @@
                                     </div>
 
                                     ${data.remaining_days > 0 ? `
-                                                                        <div class="d-flex justify-content-between text-success">
-                                                                            <span>Sisa Hari Lama</span>
-                                                                            <span>${data.remaining_days} hari</span>
-                                                                        </div>
+                                                                                        <div class="d-flex justify-content-between text-success">
+                                                                                            <span>Sisa Hari Lama</span>
+                                                                                            <span>${data.remaining_days} hari</span>
+                                                                                        </div>
 
-                                                                        <div class="d-flex justify-content-between text-success">
-                                                                            <span>Potongan Pro-rata</span>
-                                                                            <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
-                                                                        </div>
-                                                                    ` : ''}
+                                                                                        <div class="d-flex justify-content-between text-success">
+                                                                                            <span>Potongan Pro-rata</span>
+                                                                                            <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
+                                                                                        </div>
+                                                                                    ` : ''}
 
                                     <hr class="my-2">
 
