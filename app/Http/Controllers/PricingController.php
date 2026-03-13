@@ -201,6 +201,7 @@ class PricingController extends Controller
                 'valid_date'      => $request->end_date,
                 'codepaket'       => $pricing->codepaket,
                 'updated_at'      => now(),
+                'level'           => 'admin',
             ];
 
             if ($dbPosUser) {
