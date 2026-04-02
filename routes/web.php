@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\RenewalLogController;
+use App\Http\Controllers\OutletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,9 @@ Route::post('/membership/store', [MembershipController::class, 'store'])->name('
 Route::post('/membership/update/{id}', [MembershipController::class, 'update'])->name('membership.update');
 Route::delete('/membership/delete/{id}', [MembershipController::class, 'destroy'])->name('membership.destroy');
 Route::post('/pricing/{id}/preview', [PricingController::class, 'previewPrice'])->name('pricing.preview');
-
+Route::post('/outlet/store', [OutletController::class, 'store'])->name('outlet.store');
+Route::delete('/outlet/{id}', [OutletController::class, 'destroy'])->name('outlet.destroy');
+Route::put('/outlet/{id}', [OutletController::class, 'update'])->name('outlet.update');
 Route::middleware(['auth'])->group(function () {
     Route::get('/my-renewals', [RenewalLogController::class, 'index'])->name('user.renewals');
 });

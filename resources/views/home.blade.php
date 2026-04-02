@@ -68,6 +68,7 @@
                             <th>Active Period</th>
                             <th>Renewal</th>
                             <th>Membership</th>
+                            <th>Outlet</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -441,6 +442,12 @@
                                                 $canAdd = false;
                                                 $errorMsg = 'Batas maksimal Paket Pro (3 user) telah tercapai.';
                                             }
+
+                                            // Ambil daftar outlet dari db_pos berdasarkan email pricing
+                                            $outlets = DB::connection('db_pos')
+                                                ->table('outlets')
+                                                ->where('email', $pricing->email)
+                                                ->get();
                                         @endphp
 
                                         @if ($canAdd)
@@ -519,6 +526,32 @@
                                                                         <option value="admin">Admin</option>
                                                                         <option value="kasir">Kasir</option>
                                                                     </select>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Akses Outlet</label>
+                                                                    @if ($outlets->count() > 1)
+                                                                        <select name="outlet_ids[]" class="form-select"
+                                                                            multiple required size="3">
+                                                                            @foreach ($outlets as $ot)
+                                                                                <option value="{{ $ot->id }}">
+                                                                                    {{ $ot->name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        <small class="text-muted text-italic">*Tahan
+                                                                            Ctrl untuk memilih lebih dari satu</small>
+                                                                    @elseif($outlets->count() == 1)
+                                                                        <input type="text"
+                                                                            class="form-control bg-light"
+                                                                            value="{{ $outlets->first()->name }}"
+                                                                            readonly>
+                                                                        <input type="hidden" name="outlet_ids[]"
+                                                                            value="{{ $outlets->first()->id }}">
+                                                                        <small class="text-success">Otomatis terpilih ke
+                                                                            outlet utama.</small>
+                                                                    @else
+                                                                        <div class="alert alert-warning py-1 small">Belum
+                                                                            ada outlet terdaftar untuk email ini.</div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer bg-light">
@@ -611,6 +644,10 @@
                                                             </div>
                                                         @endif
                                                     </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Tutup</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -637,13 +674,13 @@
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <div class="mb-3">
-                                                                    <label class="form-label">Nama</label>
+                                                                    <label class="form-label fw-bold">Nama</label>
                                                                     <input type="text" name="name"
                                                                         class="form-control" value="{{ $muser->name }}"
                                                                         required>
                                                                 </div>
                                                                 <div class="mb-3">
-                                                                    <label class="form-label">Level</label>
+                                                                    <label class="form-label fw-bold">Level</label>
                                                                     <select name="level" class="form-select" required>
                                                                         <option value="admin"
                                                                             {{ $muser->level == 'admin' ? 'selected' : '' }}>
@@ -652,6 +689,52 @@
                                                                             {{ $muser->level == 'kasir' ? 'selected' : '' }}>
                                                                             Kasir</option>
                                                                     </select>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold"> Akses Outlet
+                                                                    </label>
+
+                                                                    @php
+                                                                        // 1. Cari dulu ID user ini di database POS menggunakan email
+                                                                        $posUser = DB::connection('db_pos')
+                                                                            ->table('users')
+                                                                            ->where('email', $muser->email) // $muser adalah data dari MembershipUser
+                                                                            ->first();
+
+                                                                        $userOutletIds = [];
+                                                                        if ($posUser) {
+                                                                            // 2. Ambil daftar ID outlet berdasarkan ID user POS (bukan ID membership)
+                                                                            $userOutletIds = DB::connection('db_pos')
+                                                                                ->table('outlet_user')
+                                                                                ->where('user_id', $posUser->id)
+                                                                                ->pluck('outlet_id')
+                                                                                ->toArray();
+                                                                        }
+                                                                    @endphp
+
+                                                                    @if ($outlets->count() > 1)
+                                                                        {{-- Gunakan ID unik untuk inisialisasi Select Modern jika mau --}}
+                                                                        <select name="outlet_ids[]"
+                                                                            id="edit_outlet_ids_{{ $muser->id }}"
+                                                                            class="form-select select-modern" multiple
+                                                                            required>
+                                                                            @foreach ($outlets as $ot)
+                                                                                <option value="{{ $ot->id }}"
+                                                                                    {{ in_array($ot->id, $userOutletIds) ? 'selected' : '' }}>
+                                                                                    {{ $ot->name }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        <small class="text-muted">*Tahan Ctrl untuk memilih
+                                                                            lebih dari satu.</small>
+                                                                    @elseif($outlets->count() == 1)
+                                                                        @php $singleOutlet = $outlets->first(); @endphp
+                                                                        <input type="text"
+                                                                            class="form-control bg-light"
+                                                                            value="{{ $singleOutlet->name }}" readonly>
+                                                                        <input type="hidden" name="outlet_ids[]"
+                                                                            value="{{ $singleOutlet->id }}">
+                                                                    @endif
                                                                 </div>
                                                             </div>
 
@@ -670,7 +753,238 @@
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
+                                <td class="text-center">
+                                    @if ($pricing->start_date && $pricing->end_date)
+                                        @php
+                                            $dbPos = DB::connection('db_pos');
+                                            // Hitung jumlah outlet milik user ini di db_pos
+                                            $outletCount = $dbPos
+                                                ->table('outlets')
+                                                ->where('email', $pricing->email)
+                                                ->count();
+                                            $namaPaket = strtolower($pricing->namapaket);
 
+                                            // Logika Pembatasan Outlet
+                                            $canAddOutlet = true;
+                                            $outletErrorMsg = '';
+
+                                            if ($namaPaket == 'basic' && $outletCount >= 1) {
+                                                $canAddOutlet = false;
+                                                $outletErrorMsg = 'Paket Basic hanya diperbolehkan memiliki 1 outlet.';
+                                            } elseif ($namaPaket == 'pro' && $outletCount >= 3) {
+                                                $canAddOutlet = false;
+                                                $outletErrorMsg = 'Paket Pro maksimal memiliki 3 outlet.';
+                                            }
+                                        @endphp
+
+                                        @if ($canAddOutlet)
+                                            <button class="btn btn-sm btn-outline-success rounded-pill px-3 me-2"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#addOutletModal{{ $pricing->id }}">
+                                                <i class="bi bi-house-add"></i> Add
+                                            </button>
+                                        @else
+                                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3 me-2"
+                                                onclick="alert('{{ $outletErrorMsg }}')">
+                                                <i class="bi bi-lock-fill"></i> Add
+                                            </button>
+                                        @endif
+
+                                        @if ($outletCount > 0)
+                                            <button class="btn btn-sm btn-outline-info rounded-pill px-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#viewOutletModal{{ $pricing->id }}">
+                                                <i class="bi bi-geo-alt"></i> View
+                                            </button>
+                                        @endif
+
+                                        <div class="modal fade" id="addOutletModal{{ $pricing->id }}" tabindex="-1"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <form method="POST" action="{{ route('outlet.store') }}">
+                                                        @csrf
+                                                        <div class="modal-header bg-success text-white">
+                                                            <h5 class="modal-title">Tambah Outlet Baru</h5>
+                                                            <button type="button" class="btn-close btn-close-white"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="pricing_id"
+                                                                value="{{ $pricing->id }}">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Nama Outlet</label>
+                                                                <input type="text" name="name" class="form-control"
+                                                                    required placeholder="Contoh: Cabang Bogor">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Alamat</label>
+                                                                <textarea name="address" class="form-control" rows="3" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-success">Simpan
+                                                                Outlet</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="viewOutletModal{{ $pricing->id }}" tabindex="-1"
+                                            aria-labelledby="viewOutletModalLabel{{ $pricing->id }}"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-primary text-white">
+                                                        <h5 class="modal-title"
+                                                            id="viewOutletModalLabel{{ $pricing->id }}">
+                                                            Manajemen Outlet - {{ $pricing->namapaket }}
+                                                        </h5>
+                                                        <button type="button" class="btn-close btn-close-white"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        @php
+                                                            $outlets = DB::connection('db_pos')
+                                                                ->table('outlets')
+                                                                ->where('email', $pricing->email)
+                                                                ->get();
+                                                        @endphp
+
+                                                        @if ($outlets->isEmpty())
+                                                            <p class="text-muted text-center mb-0">Belum ada data outlet.
+                                                            </p>
+                                                        @else
+                                                            <div class="table-responsive">
+                                                                <table
+                                                                    class="table table-striped align-middle text-center mb-0">
+                                                                    <thead class="table-light">
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Nama Outlet</th>
+                                                                            <th>Alamat</th>
+                                                                            <th>Aksi</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($outlets as $ot)
+                                                                            @php
+                                                                                // Cek apakah outlet sedang digunakan oleh user mana pun
+                                                                                $inUse = DB::connection('db_pos')
+                                                                                    ->table('outlet_user')
+                                                                                    ->where('outlet_id', $ot->id)
+                                                                                    ->exists();
+                                                                            @endphp
+                                                                            <tr>
+                                                                                <td>{{ $loop->iteration }}</td>
+                                                                                <td class="fw-bold text-dark">
+                                                                                    {{ $ot->name }}
+                                                                                    @if ($inUse)
+                                                                                        <span
+                                                                                            class="badge bg-light text-primary border ms-1"
+                                                                                            style="font-size: 0.7rem;">In
+                                                                                            Use</span>
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td class="text-start">
+                                                                                    <small
+                                                                                        class="text-muted">{{ $ot->address }}</small>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-sm btn-outline-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#editOutletModal{{ $ot->id }}">
+                                                                                            <i
+                                                                                                class="bi bi-pencil-square"></i>
+                                                                                        </button>
+
+                                                                                        @if ($outlets->count() > 1 && !$inUse)
+                                                                                            <form
+                                                                                                action="{{ route('outlet.destroy', $ot->id) }}"
+                                                                                                method="POST"
+                                                                                                class="d-inline">
+                                                                                                @csrf
+                                                                                                @method('DELETE')
+                                                                                                <input type="hidden"
+                                                                                                    name="pricing_id"
+                                                                                                    value="{{ $pricing->id }}">
+                                                                                                <button type="submit"
+                                                                                                    class="btn btn-sm btn-outline-danger"
+                                                                                                    onclick="return confirm('Yakin ingin menghapus outlet ini?')">
+                                                                                                    <i
+                                                                                                        class="bi bi-trash"></i>
+                                                                                                </button>
+                                                                                            </form>
+                                                                                        @else
+                                                                                            <button
+                                                                                                class="btn btn-sm btn-light text-muted"
+                                                                                                title="{{ $inUse ? 'Outlet sedang digunakan user' : 'Outlet utama' }}"
+                                                                                                disabled>
+                                                                                                <i
+                                                                                                    class="bi bi-lock-fill"></i>
+                                                                                            </button>
+                                                                                        @endif
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Tutup</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @foreach ($outlets as $ot)
+                                            <div class="modal fade" id="editOutletModal{{ $ot->id }}"
+                                                tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <form action="{{ route('outlet.update', $ot->id) }}"
+                                                            method="POST">
+                                                            @csrf @method('PUT')
+                                                            <div class="modal-header bg-primary text-white">
+                                                                <h5 class="modal-title">Edit Outlet</h5>
+                                                                <button type="button" class="btn-close btn-close-white"
+                                                                    data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label>Nama Outlet</label>
+                                                                    <input type="text" name="name"
+                                                                        class="form-control" value="{{ $ot->name }}"
+                                                                        required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label>Alamat</label>
+                                                                    <textarea name="address" class="form-control" required>{{ $ot->address }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Update
+                                                                    Data</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -978,16 +1292,16 @@
                                     </div>
 
                                     ${data.remaining_days > 0 ? `
-                                                                                        <div class="d-flex justify-content-between text-success">
-                                                                                            <span>Sisa Hari Lama</span>
-                                                                                            <span>${data.remaining_days} hari</span>
-                                                                                        </div>
+                                                                                                                                                                                                                                                                                                <div class="d-flex justify-content-between text-success">
+                                                                                                                                                                                                                                                                                                    <span>Sisa Hari Lama</span>
+                                                                                                                                                                                                                                                                                                    <span>${data.remaining_days} hari</span>
+                                                                                                                                                                                                                                                                                                </div>
 
-                                                                                        <div class="d-flex justify-content-between text-success">
-                                                                                            <span>Potongan Pro-rata</span>
-                                                                                            <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
-                                                                                        </div>
-                                                                                    ` : ''}
+                                                                                                                                                                                                                                                                                                <div class="d-flex justify-content-between text-success">
+                                                                                                                                                                                                                                                                                                    <span>Potongan Pro-rata</span>
+                                                                                                                                                                                                                                                                                                    <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
+                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                            ` : ''}
 
                                     <hr class="my-2">
 
@@ -1012,5 +1326,15 @@
                     });
                 });
 
+            });
+
+            // Jalankan setiap kali modal edit dibuka
+            document.querySelectorAll('.select-modern').forEach((el) => {
+                if (!el.tomselect) {
+                    new TomSelect(el, {
+                        plugins: ['remove_button'],
+                        placeholder: "Pilih Outlet..."
+                    });
+                }
             });
         </script>

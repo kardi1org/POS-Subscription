@@ -87,6 +87,18 @@ class MembershipController extends Controller
                     'model_id'   => $posUserId,
                 ]);
 
+            // Simpan Relasi Outlet
+            if ($request->has('outlet_ids')) {
+                foreach ($request->outlet_ids as $outletId) {
+                    DB::connection('db_pos')->table('outlet_user')->insert([
+                        'user_id' => $posUserId,
+                        'outlet_id' => $outletId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+
             DB::commit();
 
             return back()->with('success', 'Membership + User POS berhasil ditambahkan');
@@ -146,6 +158,24 @@ class MembershipController extends Controller
                     ->update([
                         'role_id' => $roleId,
                     ]);
+
+                // 5. UPDATE RELASI OUTLET (Perbaikan di sini)
+                if ($request->has('outlet_ids')) {
+                    $dbPos = DB::connection('db_pos');
+
+                    // Hapus akses lama menggunakan ID POS USER
+                    $dbPos->table('outlet_user')->where('user_id', $posUser->id)->delete();
+
+                    // Input akses baru menggunakan ID POS USER
+                    foreach ($request->outlet_ids as $outletId) {
+                        $dbPos->table('outlet_user')->insert([
+                            'user_id'    => $posUser->id, // GUNAKAN ID DARI DB_POS
+                            'outlet_id'  => $outletId,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
             }
 
             DB::commit();

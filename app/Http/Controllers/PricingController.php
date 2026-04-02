@@ -213,7 +213,33 @@ class PricingController extends Controller
                 $dbPosUserId = $dbPos->table('users')->insertGetId($userData);
             }
 
-            // 4️⃣ ROLE (DB_POS)
+            // 4️⃣ OUTLET DEFAULT (DB_POS)
+            // Gunakan updateOrInsert agar tidak error duplikat jika admin klik "Aktifkan" berkali-kali
+            $dbPos->table('outlets')->updateOrInsert(
+                ['email' => $mainUser->email], // Unik berdasarkan email user utama
+                [
+                    'name'       => 'Outlet Utama',
+                    'address'    => 'Alamat Default',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+
+            // Ambil ID Outlet yang baru saja dibuat/diupdate
+            $outlet = $dbPos->table('outlets')->where('email', $mainUser->email)->first();
+            $outletId = $outlet->id;
+
+            // 5️⃣ OUTLET_USER PIVOT (DB_POS)
+            $dbPos->table('outlet_user')->updateOrInsert(
+                ['user_id' => $dbPosUserId, 'outlet_id' => $outletId],
+                [
+                    'is_primary' => 1,
+                    'updated_at' => now(),
+                    // created_at hanya diisi jika insert baru
+                ]
+            );
+
+            // 6️⃣ ROLE (DB_POS)
             $dbPos->table('model_has_roles')->updateOrInsert(
                 ['model_id' => $dbPosUserId, 'model_type' => 'App\Models\User'],
                 ['role_id' => 1]
