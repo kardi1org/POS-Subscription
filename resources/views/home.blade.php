@@ -523,7 +523,7 @@
                                                                     <label class="form-label fw-bold">Level</label>
                                                                     <select name="level" class="form-select" required>
                                                                         <option value="">-- Pilih Level --</option>
-                                                                        <option value="admin">Admin</option>
+                                                                        <option value="manager">Manager</option>
                                                                         <option value="kasir">Kasir</option>
                                                                     </select>
                                                                 </div>
@@ -682,9 +682,9 @@
                                                                 <div class="mb-3">
                                                                     <label class="form-label fw-bold">Level</label>
                                                                     <select name="level" class="form-select" required>
-                                                                        <option value="admin"
-                                                                            {{ $muser->level == 'admin' ? 'selected' : '' }}>
-                                                                            Admin</option>
+                                                                        <option value="manager"
+                                                                            {{ $muser->level == 'manager' ? 'selected' : '' }}>
+                                                                            Manager</option>
                                                                         <option value="kasir"
                                                                             {{ $muser->level == 'kasir' ? 'selected' : '' }}>
                                                                             Kasir</option>
@@ -1292,16 +1292,16 @@
                                     </div>
 
                                     ${data.remaining_days > 0 ? `
-                                                                                                                                                                                                                                                                                                <div class="d-flex justify-content-between text-success">
-                                                                                                                                                                                                                                                                                                    <span>Sisa Hari Lama</span>
-                                                                                                                                                                                                                                                                                                    <span>${data.remaining_days} hari</span>
-                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                        <div class="d-flex justify-content-between text-success">
+                                                                                                                                                                                                                                                                                                            <span>Sisa Hari Lama</span>
+                                                                                                                                                                                                                                                                                                            <span>${data.remaining_days} hari</span>
+                                                                                                                                                                                                                                                                                                        </div>
 
-                                                                                                                                                                                                                                                                                                <div class="d-flex justify-content-between text-success">
-                                                                                                                                                                                                                                                                                                    <span>Potongan Pro-rata</span>
-                                                                                                                                                                                                                                                                                                    <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
-                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                            ` : ''}
+                                                                                                                                                                                                                                                                                                        <div class="d-flex justify-content-between text-success">
+                                                                                                                                                                                                                                                                                                            <span>Potongan Pro-rata</span>
+                                                                                                                                                                                                                                                                                                            <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                    ` : ''}
 
                                     <hr class="my-2">
 

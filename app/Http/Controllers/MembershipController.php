@@ -19,7 +19,7 @@ class MembershipController extends Controller
             'name'         => 'required|string|max:255',
             'email'        => 'required|email',
             'userpassword' => 'required|string',
-            'level'        => 'required|in:admin,kasir',
+            'level'        => 'required|in:manager,kasir',
         ]);
 
         // ❌ CEK EMAIL SUDAH ADA DI USERS UTAMA
@@ -63,6 +63,7 @@ class MembershipController extends Controller
                 ->insertGetId([
                     'name'             => $request->name,
                     'email'            => $request->email,
+                    'level'            => $request->level,
                     'password'         => Hash::make($request->userpassword),
                     'is_active'        => 1,
                     'tenant_database'  => $authUser->db_database,
@@ -82,7 +83,7 @@ class MembershipController extends Controller
             DB::connection('db_pos')
                 ->table('model_has_roles')
                 ->insert([
-                    'role_id'    => $request->level === 'admin' ? 1 : 3,
+                    'role_id'    => $request->level === 'manager' ? 1 : 3,
                     'model_type' => 'App\Models\User',
                     'model_id'   => $posUserId,
                 ]);
@@ -112,7 +113,7 @@ class MembershipController extends Controller
     {
         $request->validate([
             'name'  => 'required|string|max:255',
-            'level' => 'required|in:admin,kasir',
+            'level' => 'required|in:manager,kasir',
         ]);
 
         $membershipUser = MembershipUser::findOrFail($id);
@@ -144,13 +145,14 @@ class MembershipController extends Controller
                     ->where('id', $posUser->id)
                     ->update([
                         'name'       => $request->name,
+                        'level'      => $request->level,
                         'updated_at' => now(),
                     ]);
 
                 // =========================
                 // 4️⃣ UPDATE ROLE
                 // =========================
-                $roleId = $request->level === 'admin' ? 1 : 3;
+                $roleId = $request->level === 'manager' ? 1 : 3;
 
                 DB::connection('db_pos')->table('model_has_roles')
                     ->where('model_id', $posUser->id)
