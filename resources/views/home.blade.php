@@ -805,28 +805,58 @@
                                                     <form method="POST" action="{{ route('outlet.store') }}">
                                                         @csrf
                                                         <div class="modal-header bg-success text-white">
-                                                            <h5 class="modal-title">Tambah Outlet Baru</h5>
+                                                            <h5 class="modal-title">
+                                                                <i class="bi bi-plus-circle me-2"></i>Tambah Outlet Baru
+                                                            </h5>
                                                             <button type="button" class="btn-close btn-close-white"
                                                                 data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <input type="hidden" name="pricing_id"
                                                                 value="{{ $pricing->id }}">
+
                                                             <div class="mb-3">
-                                                                <label class="form-label">Nama Outlet</label>
-                                                                <input type="text" name="name" class="form-control"
-                                                                    required placeholder="Contoh: Cabang Bogor">
+                                                                <label class="form-label fw-bold">Nama Outlet</label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"><i
+                                                                            class="bi bi-shop"></i></span>
+                                                                    <input type="text" name="name"
+                                                                        class="form-control" required
+                                                                        placeholder="Contoh: Cabang Bogor">
+                                                                </div>
                                                             </div>
+
                                                             <div class="mb-3">
-                                                                <label class="form-label">Alamat</label>
-                                                                <textarea name="address" class="form-control" rows="3" required></textarea>
+                                                                <label class="form-label fw-bold">No. Telepon /
+                                                                    WhatsApp</label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"><i
+                                                                            class="bi bi-telephone"></i></span>
+                                                                    <input type="text" name="phone"
+                                                                        class="form-control"
+                                                                        placeholder="Contoh: 08123456xxx">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold">Alamat</label>
+                                                                <textarea name="address" class="form-control" rows="2" required placeholder="Alamat lengkap outlet..."></textarea>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold">Informasi
+                                                                    Tambahan</label>
+                                                                <textarea name="info" class="form-control" rows="2"
+                                                                    placeholder="Catatan tambahan (opsional ini muncul di footer struk)"></textarea>
+
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit" class="btn btn-success">Simpan
-                                                                Outlet</button>
+                                                            <button type="submit" class="btn btn-success">
+                                                                <i class="bi bi-save me-1"></i> Simpan Outlet
+                                                            </button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -859,13 +889,13 @@
                                                             </p>
                                                         @else
                                                             <div class="table-responsive">
-                                                                <table
-                                                                    class="table table-striped align-middle text-center mb-0">
+                                                                <table class="table table-striped align-middle mb-0">
                                                                     <thead class="table-light">
                                                                         <tr>
                                                                             <th>#</th>
                                                                             <th>Nama Outlet</th>
                                                                             <th>Alamat</th>
+                                                                            <th>Phone</th>
                                                                             <th>Aksi</th>
                                                                         </tr>
                                                                     </thead>
@@ -892,6 +922,10 @@
                                                                                 <td class="text-start">
                                                                                     <small
                                                                                         class="text-muted">{{ $ot->address }}</small>
+                                                                                </td>
+                                                                                <td class="text-start">
+                                                                                    <small
+                                                                                        class="text-muted">{{ $ot->telp }}</small>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div>
@@ -956,25 +990,54 @@
                                                             method="POST">
                                                             @csrf @method('PUT')
                                                             <div class="modal-header bg-primary text-white">
-                                                                <h5 class="modal-title">Edit Outlet</h5>
+                                                                <h5 class="modal-title">
+                                                                    <i class="bi bi-pencil-square me-2"></i>Edit Outlet
+                                                                </h5>
                                                                 <button type="button" class="btn-close btn-close-white"
                                                                     data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="mb-3">
-                                                                    <label>Nama Outlet</label>
-                                                                    <input type="text" name="name"
-                                                                        class="form-control" value="{{ $ot->name }}"
-                                                                        required>
+                                                                    <label class="form-label fw-bold">Nama Outlet</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text"><i
+                                                                                class="bi bi-shop"></i></span>
+                                                                        <input type="text" name="name"
+                                                                            class="form-control"
+                                                                            value="{{ $ot->name }}" required>
+                                                                    </div>
                                                                 </div>
+
                                                                 <div class="mb-3">
-                                                                    <label>Alamat</label>
-                                                                    <textarea name="address" class="form-control" required>{{ $ot->address }}</textarea>
+                                                                    <label class="form-label fw-bold">No. Telepon /
+                                                                        WhatsApp</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text"><i
+                                                                                class="bi bi-telephone"></i></span>
+                                                                        <input type="text" name="phone"
+                                                                            class="form-control"
+                                                                            value="{{ $ot->telp ?? '' }}"
+                                                                            placeholder="Contoh: 08123456xxx">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Alamat</label>
+                                                                    <textarea name="address" class="form-control" rows="2" required>{{ $ot->address }}</textarea>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label class="form-label fw-bold">Informasi
+                                                                        Tambahan</label>
+                                                                    <textarea name="info" class="form-control" rows="2" placeholder="Catatan tambahan...">{{ $ot->info ?? '' }}</textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-primary">Update
-                                                                    Data</button>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    <i class="bi bi-save me-1"></i> Update Data
+                                                                </button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -1292,16 +1355,16 @@
                                     </div>
 
                                     ${data.remaining_days > 0 ? `
-                                                                                                                                                                                                                                                                                                        <div class="d-flex justify-content-between text-success">
-                                                                                                                                                                                                                                                                                                            <span>Sisa Hari Lama</span>
-                                                                                                                                                                                                                                                                                                            <span>${data.remaining_days} hari</span>
-                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                <div class="d-flex justify-content-between text-success">
+                                                                                                                                                                                                                                                                                                                                                                    <span>Sisa Hari Lama</span>
+                                                                                                                                                                                                                                                                                                                                                                    <span>${data.remaining_days} hari</span>
+                                                                                                                                                                                                                                                                                                                                                                </div>
 
-                                                                                                                                                                                                                                                                                                        <div class="d-flex justify-content-between text-success">
-                                                                                                                                                                                                                                                                                                            <span>Potongan Pro-rata</span>
-                                                                                                                                                                                                                                                                                                            <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
-                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                    ` : ''}
+                                                                                                                                                                                                                                                                                                                                                                <div class="d-flex justify-content-between text-success">
+                                                                                                                                                                                                                                                                                                                                                                    <span>Potongan Pro-rata</span>
+                                                                                                                                                                                                                                                                                                                                                                    <span>- Rp ${data.remaining_value.toLocaleString('id-ID')}</span>
+                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                            ` : ''}
 
                                     <hr class="my-2">
 

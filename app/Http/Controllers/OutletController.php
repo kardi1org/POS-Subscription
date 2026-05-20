@@ -14,6 +14,8 @@ class OutletController extends Controller
             'pricing_id' => 'required',
             'name'       => 'required|string|max:255',
             'address'    => 'required|string',
+            'telp'      => 'nullable|string|max:20', // Tambahan field
+            'info'       => 'nullable|string',        // Tambahan field
         ]);
 
         $pricing = Pricing::findOrFail($request->pricing_id);
@@ -22,11 +24,12 @@ class OutletController extends Controller
         try {
             DB::beginTransaction();
 
-            // Insert ke tabel outlets di DB_POS
             $dbPos->table('outlets')->insert([
                 'name'       => $request->name,
-                'email'      => $pricing->email, // Gunakan email owner sebagai identifier
+                'email'      => $pricing->email,
                 'address'    => $request->address,
+                'telp'      => $request->phone,      // Tambahan
+                'info'       => $request->info,       // Tambahan
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -44,15 +47,18 @@ class OutletController extends Controller
         $request->validate([
             'name'    => 'required|string|max:255',
             'address' => 'required|string',
+            'telp'   => 'nullable|string|max:20', // Tambahan field
+            'info'    => 'nullable|string',        // Tambahan field
         ]);
 
         try {
-            // Update langsung ke koneksi DB POS
             DB::connection('db_pos')->table('outlets')
                 ->where('id', $id)
                 ->update([
                     'name'       => $request->name,
                     'address'    => $request->address,
+                    'telp'      => $request->phone, // Tambahan
+                    'info'       => $request->info,  // Tambahan
                     'updated_at' => now(),
                 ]);
 
