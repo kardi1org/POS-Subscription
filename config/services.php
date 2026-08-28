@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sonar' => [
+        'webhook_token' => env('SONAR_WEBHOOK_TOKEN'),
+    ],
+
 ];
